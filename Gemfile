@@ -73,13 +73,12 @@ gem 'active_model_serializers', '~> 0.10.10'
 
 gem 'will_paginate', '~> 3.3'
 
+gem 'rolify', '~> 5.0'
+
 # gem 'cancan', '~> 1.6.10'
 #
 # gem 'sendgrid-ruby', '~> 4.0', '>= 4.0.6'
 #
 # gem 'rack-attack', '~> 5.0', '>= 5.0.1'
-#
 # gem 'ipcat'
-#
-# gem 'grape-swagger', '~> 0.25.3'
 #
