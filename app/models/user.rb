@@ -23,7 +23,7 @@ class User < ApplicationRecord
   end
 
   def role_names=(role)
-    roles = Role.where("name IN (?)", role)
+    roles = Role.where('name IN (?)', role)
     self.roles << roles
   end
 
@@ -39,7 +39,7 @@ class User < ApplicationRecord
 
   def create_unique_identifier
     begin
-      self.uid = SecureRandom.hex(10) # or whatever you chose like UUID tools
+      self.uid = SecureRandom.hex(5) # or whatever you chose like UUID tools
     end while self.class.exists?(:uid => uid)
   end
 
