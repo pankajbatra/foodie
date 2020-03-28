@@ -10,12 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_144142) do
+ActiveRecord::Schema.define(version: 2020_03_28_155757) do
 
   create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp"
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "restaurants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "status", limit: 10, default: "Active", null: false
+    t.string "description", limit: 100
+    t.boolean "open_for_delivery_now", default: true
+    t.integer "min_delivery_amount", default: 0
+    t.integer "avg_delivery_time", default: 45
+    t.integer "delivery_charge", default: 0
+    t.integer "packing_charge", default: 0
+    t.decimal "tax_percent", precision: 4, scale: 2, default: "0.0"
+    t.decimal "rating", precision: 5, scale: 4
+    t.string "rid", limit: 10
+    t.string "phone_number", limit: 15
+    t.string "locality", limit: 100
+    t.string "address", limit: 200
+    t.decimal "latitude", precision: 17, scale: 15
+    t.decimal "longitude", precision: 18, scale: 15
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name", "locality"], name: "index_restaurants_on_name_and_locality", unique: true
+    t.index ["rid"], name: "index_restaurants_on_rid", unique: true
   end
 
   create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -44,8 +67,11 @@ ActiveRecord::Schema.define(version: 2020_03_28_144142) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "uid"
+    t.string "status", limit: 10, default: "Active", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
   create_table "users_roles", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  extend Enumerize
   rolify
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
@@ -9,6 +10,7 @@ class User < ApplicationRecord
             :numericality => true,
             :length => { :minimum => 10, :maximum => 15 }
   after_create :assign_default_role
+  enumerize :status, in: [:Active, :Disabled], default: :Active
 
   def assign_default_role
     self.add_role(:customer) if self.roles.blank?
@@ -17,6 +19,22 @@ class User < ApplicationRecord
   def role_names=(role)
     roles = Role.where("name IN (?)", role)
     self.roles << roles
+  end
+
+  def active_for_authentication?
+    super && account_active?
+  end
+
+  def account_active?
+    status == :Active
+  end
+
+  before_create :create_unique_identifier
+
+  def create_unique_identifier
+    begin
+      self.uid = SecureRandom.hex(10) # or whatever you chose like UUID tools
+    end while self.class.exists?(:uid => uid)
   end
 
 end

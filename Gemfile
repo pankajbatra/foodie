@@ -75,10 +75,8 @@ gem 'will_paginate', '~> 3.3'
 
 gem 'rolify', '~> 5.0'
 
-# gem 'cancan', '~> 1.6.10'
-#
+gem 'cancancan', '~> 3.1'
+
 # gem 'sendgrid-ruby', '~> 4.0', '>= 4.0.6'
-#
 # gem 'rack-attack', '~> 5.0', '>= 5.0.1'
 # gem 'ipcat'
-#

@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
   include ActionController::Serialization
   before_action :configure_permitted_parameters, if: :devise_controller?
+  serialization_scope :current_user
 
   protected
 

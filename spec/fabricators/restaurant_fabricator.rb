@@ -1,0 +1,2 @@
+Fabricator(:restaurant) do
+end
