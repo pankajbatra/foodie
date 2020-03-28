@@ -7,7 +7,9 @@ RSpec.describe 'POST /login', type: :request do
     {
         user: {
             email: user.email,
-            password: user.password
+            password: user.password,
+            name: user.name,
+            mobile: user.mobile
         }
     }
   end
@@ -28,7 +30,7 @@ RSpec.describe 'POST /login', type: :request do
     it 'returns valid JWT token' do
       token_from_request = response.headers['Authorization'].split(' ').last
       decoded_token = JWT.decode(token_from_request, Rails.application.credentials.devise_jwt_secret_key, true)
-      expect(decoded_token.first[‘sub’]).to be_present
+      expect(decoded_token.first['sub']).to be_present
     end
   end
 
@@ -44,8 +46,8 @@ end
 RSpec.describe 'DELETE /logout', type: :request do
   let(:url) { '/logout' }
 
-  it 'returns 204, no content' do
+  it 'returns 200, no content' do
     delete url
-    expect(response).to have_http_status(204)
+    expect(response).to have_http_status(200)
   end
 end

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
+  respond_to :json
   include Response
   include ExceptionHandler
-  # before_action :authenticate_user!
   include ActionController::Serialization
   before_action :configure_permitted_parameters, if: :devise_controller?
 

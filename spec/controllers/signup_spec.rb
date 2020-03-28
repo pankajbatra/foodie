@@ -6,7 +6,9 @@ RSpec.describe 'POST /signup', type: :request do
     {
         user: {
             email: 'user@example.com',
-            password: 'password'
+            password: 'password',
+            mobile: '9873241200',
+            name: 'tester'
         }
     }
   end
@@ -14,12 +16,8 @@ RSpec.describe 'POST /signup', type: :request do
   context 'when user is unauthenticated' do
     before { post url, params: params }
 
-    it 'returns 200' do
-      expect(response.status).to eq 200
-    end
-
-    it 'returns a new user' do
-      expect(response.body).to match_schema('user')
+    it 'returns 201' do
+      expect(response.status).to eq 201
     end
   end
 
@@ -29,12 +27,8 @@ RSpec.describe 'POST /signup', type: :request do
       post url, params: params
     end
 
-    it 'returns bad request status' do
-      expect(response.status).to eq 400
-    end
-
-    it 'returns validation errors' do
-      expect(json['errors'].first['title']).to eq('Bad Request')
+    it 'returns 422 status' do
+      expect(response.status).to eq 422
     end
   end
 end
