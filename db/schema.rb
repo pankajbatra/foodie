@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_155757) do
+ActiveRecord::Schema.define(version: 2020_03_28_174148) do
 
   create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "jti", null: false
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2020_03_28_155757) do
     t.decimal "longitude", precision: 18, scale: 15
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "owner_id"
     t.index ["name", "locality"], name: "index_restaurants_on_name_and_locality", unique: true
     t.index ["rid"], name: "index_restaurants_on_rid", unique: true
   end

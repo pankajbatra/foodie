@@ -1,5 +1,10 @@
 # README
 
+    Deployed path: https://toptal.croftr.com/ 
+    Web Server: Rails with Nginx, Puma on Amazon EC2 Micro instance
+    Backend: Mysql on Amazon RDS
+    Deployment Automation: Capistrano
+
 An application for Food Delivery
 
 * User must be able to create an account and log in.

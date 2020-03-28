@@ -12,6 +12,12 @@ class User < ApplicationRecord
   after_create :assign_default_role
   enumerize :status, in: [:Active, :Disabled], default: :Active
 
+  has_one :restaurant, :class_name => 'Restaurant', :foreign_key => 'owner_id', :dependent => :destroy
+
+  def is_restaurant_owner?
+    has_role? :restaurant
+  end
+
   def assign_default_role
     self.add_role(:customer) if self.roles.blank?
   end

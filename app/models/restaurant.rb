@@ -1,8 +1,9 @@
 class Restaurant < ApplicationRecord
   extend Enumerize
-  rolify
+  resourcify
   before_create :create_unique_identifier
   enumerize :status, in: [:Active, :Disabled], default: :Active
+  belongs_to :owner, :class_name => 'User'
 
   def create_unique_identifier
     begin
