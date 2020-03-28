@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(version: 2020_03_27_205780) do
 
   create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "jti", null: false
+    t.datetime "exp"
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
@@ -24,6 +25,7 @@ ActiveRecord::Schema.define(version: 2020_03_27_205780) do
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"

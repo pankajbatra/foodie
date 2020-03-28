@@ -40,7 +40,7 @@ Devise.setup do |config|
   # session. If you need permissions, you should implement that in a before filter.
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
-  config.authentication_keys = [:email]
+  # config.authentication_keys = [:email]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -252,6 +252,7 @@ Devise.setup do |config|
   #
   # The "*/*" below is required to match Internet Explorer requests.
   # config.navigational_formats = ['*/*', :html]
+  config.navigational_formats = []
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -297,14 +298,15 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
   config.jwt do |jwt|
-    # ENV['DEVISE_JWT_SECRET_KEY']
     jwt.secret = Rails.application.credentials.devise_jwt_secret_key
+
     jwt.dispatch_requests = [
         ['POST', %r{^/login$}]
     ]
     jwt.revocation_requests = [
         ['DELETE', %r{^/logout$}]
     ]
+
     jwt.expiration_time = 1.day.to_i
   end
 end

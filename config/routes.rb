@@ -4,10 +4,12 @@ Rails.application.routes.draw do
              path: '',
              path_names: {
                  sign_in: 'login',
-                 sign_out: 'logout'
+                 sign_out: 'logout',
+                 registration: 'signup'
              },
              controllers: {
-                 sessions: 'sessions'
+                 sessions: 'sessions',
+                 registrations: 'registrations'
              }
   # scope module: :v1, constraints: ApiVersion.new('v1', true) do
   #   resources :restaurants
