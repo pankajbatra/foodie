@@ -4,6 +4,10 @@
     Web Server: Rails with Nginx, Puma on Amazon EC2 Micro instance
     Backend: Mysql on Amazon RDS
     Deployment Automation: Capistrano
+    Auth impl: Devise, Rollify, CanCanCan, JWT
+    Backend Admin: rails_admin
+    Functional testing: RSpec
+    Security: rack-attack
 
 An application for Food Delivery
 

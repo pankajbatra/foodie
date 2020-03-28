@@ -12,8 +12,7 @@ Rails.application.routes.draw do
                  sessions: 'sessions',
                  registrations: 'registrations'
              }
-  # scope module: :v1, constraints: ApiVersion.new('v1', true) do
-  #   resources :restaurants
-  # end
-
+  scope module: :v1, constraints: ApiVersion.new('v1', true) do
+    resources :restaurants
+  end
 end
