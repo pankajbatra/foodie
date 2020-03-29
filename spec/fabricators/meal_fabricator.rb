@@ -1,0 +1,2 @@
+Fabricator(:meal) do
+end
