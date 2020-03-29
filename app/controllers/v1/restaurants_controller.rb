@@ -72,7 +72,8 @@ module V1
     private
     def restaurant_params
       params.permit(:rid, :name, :description, :min_delivery_amount, :avg_delivery_time, :delivery_charge,
-      :packing_charge, :tax_percent, :phone_number, :locality, :address, :latitude, :longitude, :open_for_delivery_now)
+      :packing_charge, :tax_percent, :phone_number, :locality, :address, :latitude, :longitude, :open_for_delivery_now,
+      cuisine_ids: [])
     end
 
     def set_restaurant

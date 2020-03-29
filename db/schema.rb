@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_174148) do
+ActiveRecord::Schema.define(version: 2020_03_29_124748) do
+
+  create_table "cuisines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", limit: 20, null: false
+    t.string "status", limit: 10, default: "Active", null: false
+    t.string "description", limit: 100
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_cuisines_on_name", unique: true
+  end
 
   create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "jti", null: false
@@ -40,6 +49,14 @@ ActiveRecord::Schema.define(version: 2020_03_28_174148) do
     t.integer "owner_id"
     t.index ["name", "locality"], name: "index_restaurants_on_name_and_locality", unique: true
     t.index ["rid"], name: "index_restaurants_on_rid", unique: true
+  end
+
+  create_table "restaurants_cuisines", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "restaurant_id"
+    t.bigint "cuisine_id"
+    t.index ["cuisine_id"], name: "index_restaurants_cuisines_on_cuisine_id"
+    t.index ["restaurant_id", "cuisine_id"], name: "index_restaurants_cuisines_on_restaurant_id_and_cuisine_id", unique: true
+    t.index ["restaurant_id"], name: "index_restaurants_cuisines_on_restaurant_id"
   end
 
   create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

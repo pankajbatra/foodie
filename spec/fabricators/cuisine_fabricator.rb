@@ -1,0 +1,2 @@
+Fabricator(:cuisine) do
+end

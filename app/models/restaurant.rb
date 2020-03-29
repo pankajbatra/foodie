@@ -6,6 +6,7 @@ class Restaurant < ApplicationRecord
   belongs_to :owner, :class_name => 'User'
   # validate :ensure_correct_owner
   validates_presence_of :owner_id
+  has_and_belongs_to_many :cuisines, :join_table => :restaurants_cuisines
 
   validates :name, :presence => true, :length => {:minimum => 3, :maximum => 100}
   validates :description, :presence => true, :length => {:minimum => 10, :maximum => 100}
@@ -52,4 +53,20 @@ class Restaurant < ApplicationRecord
   #     errors.add(:owner, 'is invalid')
   #   end
   # end
+
+  def cuisine_ids=(cuisine_ids)
+    if self.cuisines&.length>0
+      self.cuisines.each do |cuisine|
+        if cuisine_ids.include?(cuisine.id)
+          # already exists, no need to add again
+          cuisine_ids.delete(cuisine.id)
+        else
+          # not there on new list, association needs to be removed from db
+          self.cuisines.delete(cuisine)
+        end
+      end
+    end
+    cuisines = Cuisine.where('id IN (?)', cuisine_ids)
+    self.cuisines << cuisines
+  end
 end
