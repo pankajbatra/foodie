@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_29_124748) do
+ActiveRecord::Schema.define(version: 2020_03_29_140531) do
 
   create_table "cuisines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", limit: 20, null: false
@@ -25,6 +25,30 @@ ActiveRecord::Schema.define(version: 2020_03_29_124748) do
     t.string "jti", null: false
     t.datetime "exp"
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "meals", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", limit: 50, null: false
+    t.string "status", limit: 10, default: "Active", null: false
+    t.bigint "restaurant_id", null: false
+    t.bigint "cuisine_id"
+    t.string "description", limit: 200
+    t.boolean "is_chef_special"
+    t.boolean "is_veg"
+    t.boolean "contains_egg"
+    t.boolean "contains_meat"
+    t.boolean "is_vegan"
+    t.boolean "is_halal"
+    t.string "course", limit: 20
+    t.string "ingredients", limit: 200
+    t.string "spice_level", limit: 10, default: "Medium", null: false
+    t.decimal "price", precision: 7, scale: 2, null: false
+    t.integer "serves"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cuisine_id"], name: "index_meals_on_cuisine_id"
+    t.index ["restaurant_id", "name"], name: "index_meals_on_restaurant_id_and_name", unique: true
+    t.index ["restaurant_id"], name: "index_meals_on_restaurant_id"
   end
 
   create_table "restaurants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

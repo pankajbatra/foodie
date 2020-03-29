@@ -5,4 +5,5 @@ class Cuisine < ApplicationRecord
   enumerize :status, in: [:Active, :Disabled], default: :Active
   validates :description, :length => {:maximum => 100}
   has_and_belongs_to_many :restaurants, :join_table => :restaurants_cuisines
+  has_many :meals
 end

@@ -5,22 +5,22 @@ module V1
 
     def index
       if current_user.is_restaurant_owner?
-        if current_user.restaurant ==nil
+        if current_user.restaurant == nil || current_user.restaurant.status != Restaurant.status.values[0]
           json_response({ message: 'Record not found' }, :not_found)
         else
           json_response(current_user.restaurant)
         end
       else
-        @restaurants = Restaurant.where(status:Restaurant.status.values[0]).paginate(page: params[:page], per_page: 20)
-        json_response(@restaurants)
+        restaurants = Restaurant.where(status:Restaurant.status.values[0]).paginate(page: params[:page], per_page: 20)
+        json_response(restaurants)
       end
     end
 
     # POST /restaurants
     def create
       if current_user.is_restaurant_owner? && current_user.restaurant==nil
-        @restaurant = Restaurant.create!(restaurant_params.merge(:owner_id => current_user.id))
-        json_response(@restaurant, :created)
+        restaurant = Restaurant.create!(restaurant_params.merge(:owner_id => current_user.id))
+        json_response(restaurant, :created)
       else
         json_response({ message: 'You don\'t have permission for this operation'}, 403)
       end
@@ -28,7 +28,7 @@ module V1
 
     # GET /restaurants/:rid
     def show
-      if @restaurant ==nil
+      if @restaurant ==nil || @restaurant.status != Restaurant.status.values[0]
         json_response({ message: 'Record not found' }, :not_found)
       else
         if current_user.is_restaurant_owner?
@@ -48,7 +48,7 @@ module V1
     # PUT /restaurants/:rid
     # PATCH /restaurants/:rid
     def update
-      if @restaurant ==nil
+      if @restaurant ==nil || @restaurant.status != Restaurant.status.values[0]
         json_response({ message: 'Record not found' }, :not_found)
       else
         if current_user.is_restaurant_owner?
