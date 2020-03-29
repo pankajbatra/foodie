@@ -5,7 +5,11 @@ module V1
 
     def index
       if current_user.is_restaurant_owner?
-        json_response(current_user.restaurant)
+        if current_user.restaurant ==nil
+          json_response({ message: 'Record not found' }, :not_found)
+        else
+          json_response(current_user.restaurant)
+        end
       else
         @restaurants = Restaurant.where(status:Restaurant.status.values[0]).paginate(page: params[:page], per_page: 20)
         json_response(@restaurants)
@@ -24,14 +28,18 @@ module V1
 
     # GET /restaurants/:rid
     def show
-      if current_user.is_restaurant_owner?
-        if current_user.restaurant!=nil && current_user.restaurant.rid == params[:rid]
-          json_response(current_user.restaurant)
-        else
-          json_response({ message: 'You don\'t have permission for this operation'}, 403)
-        end
+      if @restaurant ==nil
+        json_response({ message: 'Record not found' }, :not_found)
       else
-        json_response(@restaurant)
+        if current_user.is_restaurant_owner?
+          if current_user.restaurant!=nil && current_user.restaurant.rid == @restaurant.rid
+            json_response(@restaurant)
+          else
+            json_response({ message: 'You don\'t have permission for this operation'}, 403)
+          end
+        else
+            json_response(@restaurant)
+        end
       end
     end
 
@@ -40,26 +48,30 @@ module V1
     # PUT /restaurants/:rid
     # PATCH /restaurants/:rid
     def update
-      if current_user.is_restaurant_owner?
-        if current_user.restaurant!=nil && current_user.restaurant.rid == params[:rid]
-          if request.method == 'PATCH'
-            current_user.restaurant.update({open_for_delivery_now: params[:open_for_delivery_now]})
-            head :no_content
+      if @restaurant ==nil
+        json_response({ message: 'Record not found' }, :not_found)
+      else
+        if current_user.is_restaurant_owner?
+          if current_user.restaurant!=nil && current_user.restaurant.rid == @restaurant.rid
+            if request.method == 'PATCH'
+              @restaurant.update!({open_for_delivery_now: params[:open_for_delivery_now]})
+              head :no_content
+            else
+              @restaurant.update!(restaurant_params)
+              head :no_content
+            end
           else
-            current_user.restaurant.update(restaurant_params)
-            head :no_content
+            json_response({ message: 'You don\'t have permission for this operation'}, 403)
           end
         else
           json_response({ message: 'You don\'t have permission for this operation'}, 403)
         end
-      else
-        json_response({ message: 'You don\'t have permission for this operation'}, 403)
       end
     end
 
     private
     def restaurant_params
-      params.permit(:name, :description, :min_delivery_amount, :avg_delivery_time, :delivery_charge,
+      params.permit(:rid, :name, :description, :min_delivery_amount, :avg_delivery_time, :delivery_charge,
       :packing_charge, :tax_percent, :phone_number, :locality, :address, :latitude, :longitude, :open_for_delivery_now)
     end
 

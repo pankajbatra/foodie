@@ -11,9 +11,9 @@ module ExceptionHandler
       json_response({ message: e.message }, :unprocessable_entity)
     end
 
-    # rescue_from StandardError do |e|
-    #   json_response({message: e.message}, :unprocessable_entity)
-    # end
+    rescue_from StandardError do |e|
+      json_response({message: e.message}, :unprocessable_entity)
+    end
 
   end
 end

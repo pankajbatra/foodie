@@ -4,7 +4,8 @@ class Restaurant < ApplicationRecord
   before_create :create_unique_identifier
   enumerize :status, in: [:Active, :Disabled], default: :Active
   belongs_to :owner, :class_name => 'User'
-  validate :ensure_correct_owner
+  # validate :ensure_correct_owner
+  validates_presence_of :owner_id
 
   validates :name, :presence => true, :length => {:minimum => 3, :maximum => 100}
   validates :description, :presence => true, :length => {:minimum => 10, :maximum => 100}
@@ -45,10 +46,10 @@ class Restaurant < ApplicationRecord
     end while self.class.exists?(:rid => rid)
   end
 
-  def ensure_correct_owner(force_create = false)
-    user = User.find(self.owner_id)
-    if !user.is_restaurant_owner? || (user.restaurant!=nil && user.restaurant.id!=self.id)
-      errors.add(:owner, 'is invalid')
-    end
-  end
+  # def ensure_correct_owner(force_create = false)
+  #   user = User.find(self.owner_id)
+  #   if !user.is_restaurant_owner? || (user.restaurant!=nil && user.restaurant.rid!=self.rid)
+  #     errors.add(:owner, 'is invalid')
+  #   end
+  # end
 end
