@@ -34,11 +34,11 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && account_active?
+    super && self.account_active?
   end
 
   def account_active?
-    status == :Active
+    status == User.status.values[0]
   end
 
   before_create :create_unique_identifier
@@ -47,6 +47,10 @@ class User < ApplicationRecord
     begin
       self.uid = SecureRandom.hex(5) # or whatever you chose like UUID tools
     end while self.class.exists?(:uid => uid)
+  end
+
+  def inactive_message
+    'Sorry, this account has been deactivated.'
   end
 
 end

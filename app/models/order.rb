@@ -11,19 +11,20 @@ class Order < ApplicationRecord
   belongs_to :restaurant
   belongs_to :user
   has_many :order_items, :dependent => :destroy
+  accepts_nested_attributes_for :order_items
 
-  validates :bill_number, :length => {:minimum => 1, :maximum => 50}
-  validates :eta_after_confirm, numericality: {greater_than_or_equal_to: 15, less_than_or_equal_to: 180}
-  validates :special_request, :length => {:minimum => 5, :maximum => 200}
-  validates :remarks, :length => {:minimum => 5, :maximum => 200}
+  validates :bill_number, :length => {:minimum => 1, :maximum => 50}, :allow_blank => true
+  validates :eta_after_confirm, numericality: {greater_than_or_equal_to: 15, less_than_or_equal_to: 180}, :allow_blank => true
+  validates :special_request, :length => {:minimum => 5, :maximum => 200}, :allow_blank => true
+  validates :remarks, :length => {:minimum => 5, :maximum => 200}, :allow_blank => true
   validates :tax_amount, numericality: {greater_than_or_equal_to: 0}, :allow_blank => false
   validates :delivery_charge, numericality: {greater_than_or_equal_to: 0}, :allow_blank => false
   validates :packing_charge, numericality: {greater_than_or_equal_to: 0}, :allow_blank => false
   validates :total_bill_amount, numericality: {greater_than_or_equal_to: 0.1}, :allow_blank => false
 
   validates :customer_mobile,:presence => true, :numericality => true, :length => { :minimum => 10, :maximum => 15 }
-  validates :customer_address, :length => {:minimum => 20, :maximum => 500}, :presence => true
-  validates :customer_locality, :length => {:minimum => 10, :maximum => 255}
+  validates :customer_address, :length => {:minimum => 10, :maximum => 500}, :presence => true
+  validates :customer_locality, :length => {:minimum => 5, :maximum => 255}
   validates :customer_name, :length => {:minimum => 3, :maximum => 50}, :presence => true
 
   validates :customer_latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}
@@ -57,7 +58,7 @@ class Order < ApplicationRecord
     if order_items&.length>0
       order_items.each do |order_item|
         # Items not outOfStock
-        unless order_item.status == Meal.status.values[0]
+        unless order_item.meal.status == Meal.status.values[0]
           errors.add(:order_items, 'is out of stock')
         end
         # invalid meal name sent
