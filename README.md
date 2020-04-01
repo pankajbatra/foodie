@@ -8,6 +8,8 @@
     Backend Admin: rails_admin
     Functional testing: RSpec
     Security: rack-attack
+    * Ruby version: 2.7.0
+    * Rails Version:6.0.2.2
 
 An application for Food Delivery
 
@@ -38,19 +40,6 @@ An application for Food Delivery
 * Functional UI/UX design is needed. You are not required to create a unique design, however, do follow best practices to make the project as functional as possible.
 * Write unit and e2e tests.
 
-* Ruby version: 2.7.0
-* Rails Version:6.0.2.2
+* How to run the test suite: rspec --format doc
 
-* System dependencies: 
-
-* Configuration: 
-
-* Database creation: 
-
-* Database initialization: 
-
-* How to run the test suite: 
-
-* Services (job queues, cache servers, search engines, etc.): 
-
-* Deployment instructions: 
+* Deployment instructions: bundle exec cap production deploy

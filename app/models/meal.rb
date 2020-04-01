@@ -14,6 +14,7 @@ class Meal < ApplicationRecord
   belongs_to :restaurant
   belongs_to :cuisine
   validate :ensure_correct_values
+  has_many :order_items
 
   validates_uniqueness_of :name, scope: %i[restaurant_id]
 

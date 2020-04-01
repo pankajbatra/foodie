@@ -1,6 +1,5 @@
 class Restaurant < ApplicationRecord
   extend Enumerize
-  resourcify
   before_create :create_unique_identifier
   enumerize :status, in: [:Active, :Disabled], default: :Active
   belongs_to :owner, :class_name => 'User'
@@ -8,6 +7,7 @@ class Restaurant < ApplicationRecord
   validates_presence_of :owner_id
   has_and_belongs_to_many :cuisines, :join_table => :restaurants_cuisines
   has_many :meals, :dependent => :destroy
+  has_many :orders
 
   validates :name, :presence => true, :length => {:minimum => 3, :maximum => 100}
   validates :description, :presence => true, :length => {:minimum => 10, :maximum => 100}
@@ -36,11 +36,9 @@ class Restaurant < ApplicationRecord
   validates :locality, :presence => true, :length => {:minimum => 3, :maximum => 100}
   validates :address, :length => {:minimum => 3, :maximum => 200},  :allow_blank => true
 
-  validates :latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90},
-            :allow_blank => true
+  validates :latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}
 
-  validates :longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180},
-            :allow_blank => true
+  validates :longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180}
 
   def create_unique_identifier
     begin
