@@ -9,12 +9,14 @@ module V1
         if current_user.restaurant == nil || current_user.restaurant.status != Restaurant.status.values[0]
           json_response({ message: 'Record not found' }, :not_found)
         else
-          json_response(current_user.restaurant.orders).order(created_at: :desc).paginate(page: params[:page],
-                                                                                      per_page: 20)
+          orders = current_user.restaurant.orders.order(created_at: :desc).paginate(page: params[:page],
+                                                                                     per_page: 20)
+          json_response(orders)
         end
       else
-        json_response(current_user.orders).order(created_at: :desc).paginate(page: params[:page],
-                                                                                        per_page: 20)
+        orders = current_user.orders.order(created_at: :desc).paginate(page: params[:page],
+                                                                                  per_page: 20)
+        json_response(orders)
       end
     end
 

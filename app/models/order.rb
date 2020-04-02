@@ -24,11 +24,11 @@ class Order < ApplicationRecord
 
   validates :customer_mobile,:presence => true, :numericality => true, :length => { :minimum => 10, :maximum => 15 }
   validates :customer_address, :length => {:minimum => 10, :maximum => 500}, :presence => true
-  validates :customer_locality, :length => {:minimum => 5, :maximum => 255}
+  validates :customer_locality, :length => {:minimum => 5, :maximum => 255}, :allow_blank => true
   validates :customer_name, :length => {:minimum => 3, :maximum => 50}, :presence => true
 
-  validates :customer_latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}
-  validates :customer_longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180}
+  validates :customer_latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}, :allow_blank => true
+  validates :customer_longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180}, :allow_blank => true
 
   validate :ensure_correct_values, :on => :create
 

@@ -3,13 +3,12 @@ class OrderSerializer < ActiveModel::Serializer
              :tax_amount, :delivery_charge, :packing_charge, :total_bill_amount, :status, :payment_mode, :payment_status,
              :special_request, :eta_after_confirm, :cancel_reason, :customer_mobile, :customer_address, :customer_locality,
              :customer_name
-  has_many :order_items
-
-  attribute :restaurant, if: :is_customer?
   attribute :bill_number, if: :is_restaurant_owner?
   attribute :customer_latitude, if: :is_restaurant_owner?
   attribute :customer_longitude, if: :is_restaurant_owner?
   attribute :remarks, if: :is_restaurant_owner?
+  has_many :order_items
+  belongs_to :restaurant, serializer: RestaurantSmallSerializer, if: :is_customer?
 
   def is_restaurant_owner?
     scope.has_role? :restaurant
