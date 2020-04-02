@@ -61,6 +61,8 @@ module V1
     def update
       if @order == nil
         json_response({ message: 'Record not found' }, :not_found)
+      elsif params[:status] == nil || params[:status] == Order.status.values[0]
+        json_response({ message: 'You don\'t have permission for this operation: Placed'}, 403)
       else
         if current_user.is_restaurant_owner?
           if current_user.restaurant!=nil && current_user.restaurant.status == Restaurant.status.values[0] &&
@@ -72,29 +74,29 @@ module V1
               when Order.status.values[5]
                 if @order.status == Order.status.values[5] || @order.status == Order.status.values[4] ||
                     @order.status == Order.status.values[3]
-                  json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  json_response({ message: 'You don\'t have permission for this operation: Cancelled'}, 403)
                 else
 
                   # No cancellation reason provided or customerCancel reason provided
-                  if params[:cancel_reason] == null || params[:cancel_reason] == Order.cancel_reason.values[0]
-                    json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  if params[:cancel_reason] == nil || params[:cancel_reason] == Order.cancel_reason.values[0]
+                    json_response({ message: 'No/Invalid Cancellation reason provided'}, 403)
 
                   # order is in placed or processing, so can't send cancel reason as damaged in transit or undelivered
                   elsif (@order.status == Order.status.values[0] || @order.status == Order.status.values[1]) &&
                       (params[:cancel_reason] == Order.cancel_reason.values[7] ||
                           params[:cancel_reason] == Order.cancel_reason.values[8])
-                    json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                    json_response({ message: 'Invalid cancellation reason'}, 403)
 
-                  # order is in processing, so can't send cancel reason as store closed
-                  elsif @order.status == Order.status.values[1] && params[:cancel_reason] == Order.cancel_reason.values[2]
-                    json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  # order is not in placed, so can't send cancel reason as store closed
+                  elsif @order.status != Order.status.values[0] && params[:cancel_reason] == Order.cancel_reason.values[2]
+                    json_response({ message: 'Invalid cancellation reason: StoreClosed'}, 403)
 
                   # order is in route, so can't send cancel reason as out of stock, store closed or delivery person not available
                   elsif @order.status == Order.status.values[2] &&
                       (params[:cancel_reason] == Order.cancel_reason.values[1] ||
                           params[:cancel_reason] == Order.cancel_reason.values[2] ||
                           params[:cancel_reason] == Order.cancel_reason.values[3])
-                    json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                    json_response({ message: 'Invalid cancellation reason at this stage'}, 403)
 
                   else
                     @order.update!({cancel_reason: params[:cancel_reason], remarks: params[:remarks],
@@ -107,7 +109,7 @@ module V1
               when Order.status.values[1]
                 # previous status is not placed
                 if @order.status != Order.status.values[0]
-                  json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  json_response({ message: 'You don\'t have permission for this operation : Processing'}, 403)
                 else
                   @order.update!({bill_number: params[:bill_number],
                                   remarks: params[:remarks], eta_after_confirm: params[:eta_after_confirm],
@@ -120,7 +122,7 @@ module V1
               when Order.status.values[2]
                 # previous status is not processing
                 if @order.status != Order.status.values[1]
-                  json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  json_response({ message: 'You don\'t have permission for this operation: InRoute'}, 403)
                 else
                   @order.update!({bill_number: params[:bill_number],
                                   remarks: params[:remarks],
@@ -133,7 +135,7 @@ module V1
               when Order.status.values[3]
                 # previous status is not inRoute
                 if @order.status != Order.status.values[2]
-                  json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                  json_response({ message: 'You don\'t have permission for this operation: Delivered'}, 403)
                 else
                   @order.update!({remarks: params[:remarks],
                                   payment_status: params[:payment_status],
@@ -141,7 +143,7 @@ module V1
                   head :no_content
                 end
               else
-                json_response({ message: 'You don\'t have permission for this operation'}, 403)
+                json_response({ message: 'You don\'t have permission for this operation: Invalid'}, 403)
             end
           else
             json_response({ message: 'You don\'t have permission for this operation'}, 403)
@@ -167,6 +169,8 @@ module V1
                 @order.update!({:received_at =>Time.now, :status => params[:status]})
                 head :no_content
               end
+            else
+              json_response({ message: 'You don\'t have permission for this operation'}, 403)
             end
           else
             json_response({ message: 'You don\'t have permission for this operation'}, 403)
