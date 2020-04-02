@@ -4,9 +4,8 @@ class Order < ApplicationRecord
   enumerize :status, in: [:Placed, :Processing, :InRoute, :Delivered, :Received, :Cancelled], default: :Placed
   enumerize :payment_mode, in: [:Cash, :Card, :Wallet], default: :Cash
   enumerize :payment_status, in: [:Pending, :Paid, :Settled], default: :Pending
-  enumerize :cancel_reason, in: [:OutOfStock, :StoreClosed, :DeliveryPerson, :InvalidAddress,
-                                 :OutOfDeliveryArea, :PaymentFailed, :DamagedInTransit, :UnDelivered,
-                                 :CustomerCancel ]
+  enumerize :cancel_reason, in: [:CustomerCancel, :OutOfStock, :StoreClosed, :DeliveryPerson, :InvalidAddress,
+                                 :OutOfDeliveryArea, :PaymentFailed, :DamagedInTransit, :UnDelivered]
 
   belongs_to :restaurant
   belongs_to :user

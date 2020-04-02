@@ -11,8 +11,8 @@ module V1
           json_response(current_user.restaurant)
         end
       else
-        restaurants = Restaurant.where(status:Restaurant.status.values[0]).order(rating: :desc).paginate(page: params[:page],
-                                                                                                         per_page: 20)
+        restaurants = Restaurant.where(status:Restaurant.status.values[0]).
+            order(:open_for_delivery_now, rating: :desc).paginate(page: params[:page], per_page: 20)
         json_response(restaurants)
       end
     end
