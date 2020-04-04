@@ -11,7 +11,8 @@ module V1
           json_response(current_user.restaurant)
         end
       else
-        restaurants = Restaurant.where(status:Restaurant.status.values[0]).
+        restaurants = Restaurant.where.not(id: current_user.restaurant_blacklistings.pluck(:restaurant_id),
+                                           status: Restaurant.status.values[1]).
             order(:open_for_delivery_now, rating: :desc).paginate(page: params[:page], per_page: 20)
         json_response(restaurants)
       end
