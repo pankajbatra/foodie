@@ -46,12 +46,9 @@ class Order < ApplicationRecord
     end
 
     # validates user has role and is active
-    unless user.is_customer? && user.status == User.status.values[0]
+    unless user.is_customer? && user.status == User.status.values[0] && !user.is_blacklisted(restaurant.id)
       errors.add(:user, 'is disabled')
     end
-
-    # not blocked for this restaurant
-    # todo
 
     total_order_amount = 0
     if order_items&.length>0

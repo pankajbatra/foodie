@@ -44,6 +44,17 @@ module V1
       end
     end
 
+    def blacklist
+      blacklisted_user = User.find_by_uid(params[:uid])
+      if current_user.is_restaurant_owner? && blacklisted_user!=nil && blacklisted_user.is_customer? &&
+          current_user.restaurant!=nil && current_user.restaurant.status == Restaurant.status.values[0]
+        RestaurantBlacklisting.create!({restaurant_id: current_user.restaurant.id, user_id: blacklisted_user.id})
+        head :no_content
+      else
+        json_response({ message: 'You don\'t have permission for this operation'}, 403)
+      end
+    end
+
     # t.decimal 'rating', precision: 5, scale: 4
 
     # PUT /restaurants/:rid

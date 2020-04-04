@@ -9,6 +9,7 @@ class OrderSerializer < ActiveModel::Serializer
   attribute :remarks, if: :is_restaurant_owner?
   has_many :order_items
   belongs_to :restaurant, serializer: RestaurantSmallSerializer, if: :is_customer?
+  belongs_to :user, serializer: UserSmallSerializer, if: :is_restaurant_owner?
 
   def is_restaurant_owner?
     scope.has_role? :restaurant

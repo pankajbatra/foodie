@@ -13,11 +13,17 @@ class User < ApplicationRecord
   enumerize :status, in: [:Active, :Disabled], default: :Active
 
   has_many :orders
+  has_many :restaurant_blacklistings, :dependent => :destroy
 
   has_one :restaurant, :class_name => 'Restaurant', :foreign_key => 'owner_id', :dependent => :destroy
 
   def is_restaurant_owner?
     has_role? :restaurant
+  end
+
+  def is_blacklisted(restaurant_id)
+    blacklisted = restaurant_blacklistings.find_by_restaurant_id(restaurant_id)
+    blacklisted != nil
   end
 
   def is_customer?

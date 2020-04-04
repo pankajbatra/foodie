@@ -45,11 +45,9 @@ module V1
     end
 
     def create
-      # not blocked for this restaurant
-      # todo
       restaurant = Restaurant.find_by_rid(params[:rid])
       if current_user.is_customer? && current_user.status == User.status.values[0] &&
-          restaurant != nil && restaurant.status == Restaurant.status.values[0]
+          restaurant != nil && restaurant.status == Restaurant.status.values[0] && !current_user.is_blacklisted(restaurant.id)
         order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
                                                  :restaurant_id => restaurant.id, :placed_at =>Time.now))
         json_response(order, :created)

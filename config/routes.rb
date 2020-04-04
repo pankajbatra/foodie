@@ -17,5 +17,6 @@ Rails.application.routes.draw do
     resources :cuisines
     resources :meals
     resources :orders
+    patch 'blacklist' => 'restaurants#blacklist', :as => :blacklist
   end
 end

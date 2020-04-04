@@ -7,6 +7,7 @@ class Restaurant < ApplicationRecord
   validates_presence_of :owner_id
   has_and_belongs_to_many :cuisines, :join_table => :restaurants_cuisines
   has_many :meals, :dependent => :destroy
+  has_many :restaurant_blacklistings, :dependent => :destroy
   has_many :orders
 
   validates :name, :presence => true, :length => {:minimum => 3, :maximum => 100}
