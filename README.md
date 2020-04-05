@@ -43,3 +43,17 @@ An application for Food Delivery
 * How to run the test suite: rspec --format doc
 
 * Deployment instructions: bundle exec cap production deploy
+ 
+* Credentials update: EDITOR=vi rails credentials:edit
+
+-- To Do ----
+* auto refresh orders and status
+* photos of meals
+* logos of restaurant
+* configure CI pipelines
+* restaurants sort by delivery time, rating, filter by cuisines (multi-select)
+* change password functionality
+* Email validation to activate account
+* Order email
+* rack-attack
+* swagger

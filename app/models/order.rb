@@ -29,12 +29,105 @@ class Order < ApplicationRecord
   validates :customer_latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}, :allow_blank => true
   validates :customer_longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180}, :allow_blank => true
 
-  validate :ensure_correct_values, :on => :create
+  validate :validate_create, :on => :create
+  validate :validate_update, :on => :update
 
-  # check status movement flow
-  # check cancel reason based upon who did it
+  def validate_update
+    case status
 
-  def ensure_correct_values(force_create = false)
+      # status can't be null
+      when nil
+        errors.add(:status, 'is not provided')
+
+      # new status can't be placed
+      when Order.status.values[0]
+        errors.add(:status, 'is not valid: Placed')
+
+      # Processing or Confirmed
+      when Order.status.values[1]
+        # previous status is not placed
+        if status_was != Order.status.values[0]
+          errors.add(:status, 'is not valid, can\'t mark processing now')
+        elsif confirmed_at == nil
+          errors.add(:confirmed_at, 'is not provided')
+        end
+
+      # In Route or Dispatched
+      when Order.status.values[2]
+        # previous status is not processing
+        if status_was != Order.status.values[1]
+          errors.add(:status, 'is not valid, can\'t mark InRoute now')
+        elsif dispatched_at == nil
+          errors.add(:dispatched_at, 'is not provided')
+        end
+
+      # Delivered
+      when Order.status.values[3]
+        # previous status is not inRoute
+        if status_was != Order.status.values[2]
+          errors.add(:status, 'is not valid, can\'t mark delivered now')
+        elsif delivered_at == nil
+          errors.add(:delivered_at, 'is not provided')
+        end
+
+      # new status received
+      when Order.status.values[4]
+        # previous status is not delivered yet
+        if status_was != Order.status.values[3]
+          errors.add(:status, 'is not valid, can\'t mark received yet')
+        elsif received_at == nil
+          errors.add(:received_at, 'is not provided')
+        end
+
+      # new status = Cancelled
+      when Order.status.values[5]
+        if status_was == Order.status.values[5] || status_was == Order.status.values[4] || status_was == Order.status.values[3]
+          errors.add(:status, 'is not valid, can\'t cancel order now')
+        else
+          # No cancellation reason provided
+          if cancel_reason == nil
+            errors.add(:cancel_reason, 'is not provided')
+
+          elsif cancelled_at == nil
+            errors.add(:cancelled_at, 'is not provided')
+
+            # order is in placed or processing, so can't send cancel reason as damaged in transit or undelivered
+          elsif (status_was == Order.status.values[0] || status_was == Order.status.values[1]) &&
+              (cancel_reason == Order.cancel_reason.values[7] || cancel_reason == Order.cancel_reason.values[8])
+            errors.add(:cancel_reason, 'is not valid')
+
+            # order is not in placed, so can't send cancel reason as store closed
+          elsif status_was != Order.status.values[0] && cancel_reason == Order.cancel_reason.values[2]
+            errors.add(:cancel_reason, 'is not valid: Store Closed')
+
+            # customerCancel reason provided at a wrong time
+          elsif cancel_reason == Order.cancel_reason.values[0] && status_was != Order.status.values[0]
+            errors.add(:cancel_reason, 'is not valid: Customer Cancellation')
+
+            # order is in route, so can't send cancel reason as out of stock, store closed or delivery person not available
+          elsif status_was == Order.status.values[2] &&
+              (cancel_reason == Order.cancel_reason.values[1] ||
+                  cancel_reason == Order.cancel_reason.values[2] ||
+                  cancel_reason == Order.cancel_reason.values[3])
+            errors.add(:cancel_reason, 'is not valid at this stage')
+          end
+        end
+      else
+        # no action required
+    end
+  end
+
+  def validate_create(force_create = false)
+    if status == nil
+      errors.add(:status, 'is not provided')
+    elsif status != Order.status.values[0]
+      errors.add(:status, 'is invalid')
+    end
+
+    if placed_at == nil
+      errors.add(:placed_at, 'is not provided')
+    end
+
     # validate restaurant's status active,
     unless restaurant.status == Restaurant.status.values[0]
       errors.add(:restaurant, 'is disabled')
