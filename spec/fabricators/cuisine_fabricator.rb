@@ -1,2 +1,0 @@
-Fabricator(:cuisine) do
-end
