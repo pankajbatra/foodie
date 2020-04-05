@@ -48,9 +48,13 @@ module V1
       restaurant = Restaurant.find_by_rid(params[:rid])
       if current_user.is_customer? && current_user.status == User.status.values[0] &&
           restaurant != nil && restaurant.status == Restaurant.status.values[0] && !current_user.is_blacklisted(restaurant.id)
-        order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
-                                                 :restaurant_id => restaurant.id, :placed_at =>Time.now))
-        json_response(order, :created)
+        if params[:order_items_attributes]==nil || params[:order_items_attributes].length==0
+          json_response({ message: 'No meals provided'}, 403)
+        else
+          order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
+                                                                 :restaurant_id => restaurant.id, :placed_at =>Time.now))
+          json_response(order, :created)
+        end
       else
         json_response({ message: 'You don\'t have permission for this operation'}, 403)
       end
