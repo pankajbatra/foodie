@@ -5,11 +5,6 @@ class RestaurantSerializer < ActiveModel::Serializer
   has_many :meals
   # belongs_to :owner, if: :is_restaurant_owner?
 
-  # scope orders to those created_by the current user
-  # has_many :orders do
-  #   object.orders.where(created_by: current_user)
-  # end
-
   # def is_restaurant_owner?
   #   scope.has_role? :restaurant && scope.id == object.owner_id
   # end

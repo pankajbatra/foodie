@@ -56,8 +56,6 @@ module V1
       end
     end
 
-    # t.decimal 'rating', precision: 5, scale: 4
-
     # PUT /restaurants/:rid
     # PATCH /restaurants/:rid
     def update

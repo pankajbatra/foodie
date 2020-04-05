@@ -51,7 +51,7 @@ class User < ApplicationRecord
 
   def create_unique_identifier
     begin
-      self.uid = SecureRandom.hex(5) # or whatever you chose like UUID tools
+      self.uid = SecureRandom.hex(5)
     end while self.class.exists?(:uid => uid)
   end
 
