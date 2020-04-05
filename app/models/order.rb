@@ -29,6 +29,8 @@ class Order < ApplicationRecord
   validates :customer_latitude, numericality: {greater_than_or_equal_to: -90, less_than_or_equal_to: 90}, :allow_blank => true
   validates :customer_longitude, numericality: {greater_than_or_equal_to: -180, less_than_or_equal_to: 180}, :allow_blank => true
 
+  before_create :save_order_amounts
+
   validate :validate_create, :on => :create
   validate :validate_update, :on => :update
 
@@ -200,6 +202,31 @@ class Order < ApplicationRecord
     begin
       self.oid = SecureRandom.hex(7)
     end while self.class.exists?(:oid => oid)
+  end
+
+  private
+  def save_order_amounts
+
+    if total_bill_amount == nil || total_bill_amount == 0 || tax_amount == nil
+      total_order_amount = 0
+      if order_items&.length>0
+        order_items.each do |order_item|
+          meals_amount = order_item.meal.price * order_item.quantity
+          total_order_amount+=meals_amount
+        end
+        total_tax = (total_order_amount*restaurant.tax_percent)/100
+
+        if self.tax_amount == nil
+          self.tax_amount = total_tax
+        end
+
+        total_order_amount+= total_tax + restaurant.delivery_charge + restaurant.packing_charge
+
+        if self.total_bill_amount == nil
+          self.total_bill_amount = total_order_amount
+        end
+      end
+    end
   end
 end
 
