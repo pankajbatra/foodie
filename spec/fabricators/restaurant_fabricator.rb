@@ -16,10 +16,10 @@ Fabricator(:restaurant) do
   owner { Fabricate(:user) }
 
   after_create { |restaurant, transients|
-    cuisines = Cuisine.order('RAND()').limit(rand(2...5))
+    cuisines = Cuisine.order('RAND()').limit(rand(1...2))
     cuisines.each do |cusi|
       Fabricate(:restaurants_cuisine, restaurant: restaurant, cuisine: cusi)
-      rand(2...4).times {
+      rand(2...3).times {
        Fabricate(:meal, restaurant: restaurant, cuisine: cusi)
       }
     end
