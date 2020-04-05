@@ -43,12 +43,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 group :development, :test do
   gem 'rspec-rails', '~> 4.0'
   gem 'fabrication', '~> 2.21'
-end
-
-group :test do
+  gem 'faker'
   gem 'factory_bot_rails', '~> 5.1', '>= 5.1.1'
   gem 'shoulda-matchers', '~> 4.3'
-  gem 'faker'
   gem 'database_cleaner'
 end
 

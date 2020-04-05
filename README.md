@@ -6,7 +6,7 @@
     Deployment Automation: Capistrano
     Auth impl: Devise, Rollify, CanCanCan, JWT
     Backend Admin: rails_admin
-    Functional testing: RSpec
+    Functional testing: RSpec, Fabricator for fake data gen
     Security: rack-attack
     * Ruby version: 2.7.0
     * Rails Version:6.0.2.2
@@ -45,6 +45,8 @@ An application for Food Delivery
 * Deployment instructions: bundle exec cap production deploy
  
 * Credentials update: EDITOR=vi rails credentials:edit
+
+* Search for fake data: faker search food
 
 -- To Do ----
 * auto refresh orders and status
