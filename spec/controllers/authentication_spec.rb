@@ -30,14 +30,18 @@ RSpec.describe 'Customer Login', type: :request do
     end
 
     it 'returns customer role' do
-      parsed_body = JSON.parse(response.body)
-      expect(parsed_body['roles'][0]['name']).to eq 'customer'
-      expect(parsed_body['roles'].length).to eq 1
+      expect(json['roles'][0]['name']).to eq 'customer'
+      expect(json['roles'].length).to eq 1
+    end
+
+    it 'returns correct data' do
+      expect(json['name']).to eq user.name
+      expect(json['mobile']).to eq user.mobile
+      expect(json['email']).to eq user.email
     end
 
     it 'does not contains restaurant object' do
-      parsed_body = JSON.parse(response.body)
-      expect(parsed_body.has_key? 'restaurant').to eq false
+      expect(json.has_key? 'restaurant').to eq false
     end
 
     it 'returns JWT token in authorization header' do
@@ -102,14 +106,12 @@ RSpec.describe 'Restaurant Login', type: :request do
     end
 
     it 'returns restaurant role' do
-      parsed_body = JSON.parse(response.body)
-      expect(parsed_body['roles'][0]['name']).to eq 'restaurant'
-      expect(parsed_body['roles'].length).to eq 1
+      expect(json['roles'][0]['name']).to eq 'restaurant'
+      expect(json['roles'].length).to eq 1
     end
 
     it 'contains restaurant object' do
-      parsed_body = JSON.parse(response.body)
-      expect(parsed_body.has_key? 'restaurant').to eq true
+      expect(json.has_key? 'restaurant').to eq true
     end
 
     it 'returns JWT token in authorization header' do
