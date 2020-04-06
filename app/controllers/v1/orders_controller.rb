@@ -46,8 +46,9 @@ module V1
 
     def create
       restaurant = Restaurant.find_by_rid(params[:rid])
-      if current_user.is_customer? && current_user.status == User.status.values[0] &&
-          restaurant != nil && restaurant.status == Restaurant.status.values[0] && !current_user.is_blacklisted(restaurant.id)
+      if current_user.is_customer? && current_user.status == User.status.values[0] && restaurant != nil &&
+          restaurant.status == Restaurant.status.values[0] && restaurant.open_for_delivery_now &&
+          !current_user.is_blacklisted(restaurant.id)
         if params[:order_items_attributes]==nil || params[:order_items_attributes].length==0
           json_response({ message: 'No meals provided'}, 403)
         else

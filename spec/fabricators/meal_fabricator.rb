@@ -13,7 +13,7 @@ Fabricator(:meal) do
   course { Meal.course.values.sample }
   spice_level { Meal.spice_level.values.sample }
   ingredients { Faker::Food::ingredient.truncate(200) }
-  price { Faker::Commerce::price}
+  price { Faker::Number.within(range: 20.5..200.8)}
   serves { Faker::Number::non_zero_digit}
 
   cuisine

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_04_112000) do
+ActiveRecord::Schema.define(version: 2020_04_06_185026) do
 
   create_table "cuisines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", limit: 20, null: false
@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 2020_04_04_112000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["cuisine_id"], name: "index_meals_on_cuisine_id"
-    t.index ["restaurant_id", "name"], name: "index_meals_on_restaurant_id_and_name", unique: true
     t.index ["restaurant_id"], name: "index_meals_on_restaurant_id"
   end
 

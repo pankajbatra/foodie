@@ -16,7 +16,7 @@ class Meal < ApplicationRecord
   validate :ensure_correct_values
   has_many :order_items
 
-  validates_uniqueness_of :name, scope: %i[restaurant_id]
+  # validates_uniqueness_of :name, scope: %i[restaurant_id, cuisine_id], case_sensitive: false
 
   def ensure_correct_values(force_create = false)
     if (self.is_veg || self.is_vegan) && (self.contains_egg || self.contains_meat)
