@@ -1,0 +1,16 @@
+<ul class="nav navbar-top-links navbar-right">
+    <!-- /.dropdown -->
+    <li class="dropdown hidden-xs">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            <em class="fa fa-user fa-fw"></em>
+            {{user_loginId}} <em class="fa fa-caret-down"></em>
+        </a>
+        <ul class="dropdown-menu dropdown-user">
+            <li><a href="javascript:void(0)" ng-click="logout()" ><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+            </li>
+        </ul>
+        <!-- /.dropdown-user -->
+    </li>
+    <!-- /.dropdown -->
+    <li class="visible-xs"><a href="javascript:void(0)" ng-click="logout()" ><i class="fa fa-sign-out fa-fw"></i> Logout</a> <h3 class="col-lg-12">{{ToptalPageTitle}}</h3> </li>
+</ul>

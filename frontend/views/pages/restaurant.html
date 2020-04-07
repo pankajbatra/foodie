@@ -1,0 +1,440 @@
+<div ng-controller="restaurantCtrl" ng-init="init()">
+    <div class="space-seperator"></div>
+
+    <div class="row">
+        <div class="row" ng-controller="AlertsCtrl">
+            <div class="col-xs-12" ng-repeat="(cat, msgs) in alerts | keys: ['rest']">
+                <alert data-ng-repeat="alert in msgs" type="{{alert.type}}" close="closeAlert(cat, $index)"
+                       ng-init="autoDismiss(cat, $index, 5000)">{{alert.msg}}
+                </alert>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div ng-if="hasPermissionToRestaurant" class="col-md-12">
+            <div class="row customer-page-row">
+                <div class="panel panel-warning">
+                    <div class="panel-heading"><h3>{{restaurant.rid? 'Restaurant details': "Let's get started"}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4>{{restaurant.rid ? '': 'Kindly fill in some details about your restaurant'}}</h4>
+                            </div>
+                            <div ng-if="restaurant.rid" class="col-md-2" style="float: right; text-align: center;padding-bottom: 5px;">
+                                <h4>Status: {{restaurant.open_for_delivery_now ? 'Open' : 'Closed'}}</h4>
+                                <toggle-switch
+                                        ng-model="restaurant.open_for_delivery_now"
+                                        on-label="Open"
+                                        knob-label="Status"
+                                        class="switch-success"
+                                        ng-confirm-click="Are you sure you want to {{!restaurant.open_for_delivery_now ? 'Open' : 'Close'}} restaurant?"
+                                        ng-change="changeStatus(restaurant.open_for_delivery_now)"
+                                        off-label="Closed">
+                                </toggle-switch>
+                            </div>
+                        </div>
+                        <br>
+                        <form ng-submit="saveRestaurantDetails(restaurant)" name="detailsForm">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Restaurant Name <em ng-if="createUser" class="fa fa-asterisk"></em></label>
+                                        <input ng-disabled="!createUser" type="text" class="form-control" minlength="3" maxlength="100" ng-model="restaurant.name" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Description <em ng-if="createUser" class="fa fa-asterisk"></em></label>
+                                        <input ng-disabled="!createUser" type="text" minlength="10" maxlength="100" class="form-control" ng-model="restaurant.description" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Restaurant Phone Number </label>
+                                        <input ng-disabled="!createUser" type="number" class="form-control" ng-model="restaurant.phone_number">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Locality <em ng-if="createUser" class="fa fa-asterisk"></em></label>
+                                        <input ng-disabled="!createUser" type="text" minlength="3" maxlength="100" class="form-control" ng-model="restaurant.locality" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Restaurant Address </label>
+                                        <input ng-disabled="!createUser" type="text" minlength="3" maxlength="200" class="form-control" ng-model="restaurant.address">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Min Order Amount </label>
+                                        <input ng-disabled="!createUser" type="number" min="0" max="1000" class="form-control" ng-model="restaurant.min_delivery_amount" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Avg Delivery Time (in minutes)</label>
+                                        <input ng-disabled="!createUser" type="number" min="15" max="180" class="form-control" ng-model="restaurant.avg_delivery_time" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Tax percent </label>
+                                        <input ng-disabled="!createUser" min="0" max="30" type="number" class="form-control" ng-model="restaurant.tax_percent" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Delivery Charge </label>
+                                        <input ng-disabled="!createUser" type="number" min="0" max="100" class="form-control" ng-model="restaurant.delivery_charge" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Packing Charge </label>
+                                        <input ng-disabled="!createUser" type="number" min="0" max="100" class="form-control" ng-model="restaurant.packing_charge" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Cuisines <em ng-if="createUser" class="fa fa-asterisk"></em></label>
+                                        <div class="row">
+                                            <div class="col-md-4" ng-repeat="cuisine in cuisines">
+                                                <input ng-disabled="!createUser" type="checkbox" ng-model="cuisine.selected" />
+                                                <span style="font-size: 16px; color: #4f1d1e">
+                                                    {{cuisine.name.toUpperCase()}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Latitude </label>
+                                        <input ng-disabled="!createUser" type="number" step="any" class="form-control" ng-model="restaurant.latitude" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Longitude </label>
+                                        <input ng-disabled="!createUser" type="number" step="any" class="form-control" ng-model="restaurant.longitude" >
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" ng-disabled="button.loading"
+                                    ng-class="{loggingIn: button.loading}" class="btn btn-lg btn-success">
+                                {{ button.loading? 'Saving...':  createUser? 'Save':'Edit' }}
+                            </button>
+                            <button style="margin-left: 10px" ng-if="showCancel" ng-click="cancelEdit()" ng-disabled="button.loading"
+                                    ng-class="{loggingIn: button.loading}" class="btn btn-lg btn-warning">
+                                {{ button.loading? 'Saving...': 'cancel' }}
+                            </button>
+                            <div ng-if="!restaurant.rid || showCancel" class="col-md-12" style="padding:0;">
+                                <p ng-show="detailsForm.longitude.$invalid" class="help-block">
+                                    Please Drag Marker to Restaurant Location
+                                </p>
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <ui-gmap-google-map center="map.center" zoom="map.zoom">
+                                            <ui-gmap-layer type="TrafficLayer"></ui-gmap-layer>
+                                            <ui-gmap-marker coords="marker.coords" options="marker.options"  icon="marker.icon"
+                                                            events="marker.events" idkey="marker.id">
+                                            </ui-gmap-marker>
+                                        </ui-gmap-google-map>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="!hasPermissionToRestaurant" class="row">
+
+            <div ng-if="!viewRestaurantDetails" class="col-md-12">
+                <h2 style="padding: 14px">Top Restuarants</h2>
+                <br>
+                <div class="col-md-3 col-sm-6" ng-repeat="rest in restaurants" style="padding: 10px;"
+                     ng-class="{'disabled-div' : !rest.open_for_delivery_now, 'rest-div': rest.open_for_delivery_now}">
+                    <div ng-click="restaurantDetailPage(rest)" class="thumbnail">
+                        <img src="./images/undraw_breakfast_psiw.svg" alt="loading...">
+                        <div class="caption">
+                            <span ng-if="rest.rating" class="badge" style="float:right; background-color:green;font-size: 20px">{{rest.rating}}</span>
+                            <h4>{{rest.name}}</h4>
+                            <p style="color: grey">{{rest.cuisines.join(', ') | uppercase}}</p>
+                            <hr>
+                            <div ng-if="rest.open_for_delivery_now" class="col-md-12 no-padding" style="display: flex; justify-content: space-between; color: grey">
+                                <span>{{rest.avg_delivery_time}} Mins</span>
+                                <span>Min Order {{rest.min_delivery_amount}}/-</span>
+                                <span>{{rest.locality | uppercase}}</span>
+                            </div>
+                            <div ng-if="!rest.open_for_delivery_now" class="col-md-12 no-padding" style="display: flex; justify-content: space-between; color: red">
+                                <span style="font-size: 16px">CLOSED FOR DELIVERY</span>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 row-centered" ng-if="!viewRestaurantDetails">
+                <pagination boundary-links="false" max-size="0" total-items="totalItems"
+                            ng-model="$parent.currentPage" class="pagination-sm" previous-text="&laquo; Previous"
+                            next-text="Next &raquo;" first-text="&laquo;" last-text="&raquo;"
+                            items-per-page="page_size" ng-change="fetchRestaurantsForCustomer()">
+                </pagination>
+            </div>
+            <div ng-if="viewRestaurantDetails" class="col-md-12">
+                <div class="jumbotron" style="text-align: left; padding: 15px">
+                    <span ng-if="restaurant.rating" style="color:green;font-size: 20px">
+                        <em class="fa fa-star"></em> {{restaurant.rating || 4}}</span>
+                    <h2>{{restaurant.name}}
+                        <p style="float: right; ">
+                            <img ng-if="!restaurant.cuisineNames.includes('indian') && !restaurant.cuisineNames.includes('thai')" style="height: 13em" src="./images/undraw_Hamburger_8ge6.svg" alt="loading...">
+                            <img ng-if="restaurant.cuisineNames.includes('indian') || restaurant.cuisineNames.includes('thai')" style="height: 13em" src="./images/undraw_eating_together_tjhx.svg" alt="loading...">
+                        </p>
+                    </h2>
+                    <h4>{{restaurant.description}}</h4>
+                    <p>Cuisines - {{restaurant.cuisineNames.join(', ') | uppercase}}</p>
+                    <p>{{restaurant.address | uppercase}}, {{restaurant.locality | uppercase}}<br> Phone: {{restaurant.phone_number}}</p>
+                    <p>Delivery time - {{restaurant.avg_delivery_time}} Mins</p>
+                    <p>Min Order - {{restaurant.min_delivery_amount}}/-</p>
+                    <span>Delivery Charge: {{restaurant.delivery_charge}}/-</span> |
+                    <span>Packing Charge: {{restaurant.packing_charge}}/-</span> |
+                    <span>Tax: {{restaurant.tax_percent}} %</span>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="row" ng-controller="AlertsCtrl">
+                            <div class="col-xs-12" ng-repeat="(cat, msgs) in alerts | keys: ['meal']">
+                                <alert data-ng-repeat="alert in msgs" type="{{alert.type}}" close="closeAlert(cat, $index)"
+                                       ng-init="autoDismiss(cat, $index, 5000)">{{alert.msg}}
+                                </alert>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 style="padding: 14px">Recommended Meals</h2>
+                    <div class="col-md-3 col-sm-6" ng-repeat="meal in restaurant.meals" style="padding: 10px;"
+                         ng-class="{'disabled-div' : meal.status=='OutOfStock'}">
+                        <div class="thumbnail">
+                            <img src="./images/undraw_breakfast_psiw.svg" alt="loading...">
+                            <div class="caption">
+                                <span ng-if="meal.is_veg || meal.is_vegan" style="float:right;">
+                                    <span class="badge" style="background-color:green;font-size: 15px;color: white">Veg</span>
+                                </span>
+                                <span ng-if="meal.contains_egg || meal.contains_meat" style="float:right;">
+                                    <span class="badge" style="background-color:red;font-size: 15px;color: white">Non-Veg</span>
+                                </span>
+                                <h4>{{meal.name}}</h4>
+                                <p style="color: dimgray">{{meal.course}} ({{meal.cuisine.name | uppercase}})</p>
+                                <span style="color: grey">{{meal.description}}</span>
+                                <span style="color: grey; float: right">
+                                     <div class="quantity">
+                                        <a href="javascript:void(0)" ng-click="removeMeal(restaurant, meal)" class="quantity__minus"><span>-</span></a>
+                                        <input name="quantity" ng-model="meal.quantity" type="text" class="quantity__input">
+                                        <a href="javascript:void(0)" ng-click="addMeal(restaurant, meal)" class="quantity__plus"><span>+</span></a>
+                                    </div>
+                                </span>
+                                <hr>
+                                <div class="col-md-12 no-padding" style="display: flex; justify-content: space-between; color: grey">
+                                    <span>Serves: {{meal.serves}}</span>
+                                    <strong><span>Price: {{meal.price}}/-</span></strong>
+                                    <span>Spicy: {{meal.spice_level }}</span>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <nav ng-if="cart.items" class="navbar navbar-inverse navbar-fixed-bottom" style="position: sticky;height: 5em;padding: 11px;border-radius: 50px;">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="javascript:void(0)">
+                    <em class="fa fa-shopping-cart"></em> Cart
+                </a>
+            </div>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="javascript:void(0)">
+                    Total Items: {{cart.items}}
+                </a>
+            </div>
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="javascript:void(0)">
+                    Total Amount: {{cart.total_bill_amount.toFixed(2)}}/-
+                </a>
+            </div>
+            <button ng-click="checkout()" type="button" class="btn btn-lg btn-warning">Checkout <em class="fa fa-arrow-circle-o-right"></em></button>
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>
+<script type="text/ng-template" id="modal-update-confirmation.html">
+    <div class="modal-content ng-scope">
+        <div class="modal-header">
+            <h3>Items already in cart</h3>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 14px; color: grey">Your cart contains items from other restaurant.
+                Would you like to reset your cart for adding items from this restaurant?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">No</button>
+            <button type="button" class="btn btn-primary" ng-click="updateCart()">Yes</button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="modal-out-of-stock.html">
+    <div class="modal-content ng-scope">
+        <div class="modal-header">
+            <h5>This Item is currently out of stock</h5>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" ng-click="close()">Ok</button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="modal-checkout.html">
+    <div class="modal-content ng-scope">
+        <div class="modal-header">
+            <div class="row">
+                <div class="row" ng-controller="AlertsCtrl">
+                    <div class="col-xs-12" ng-repeat="(cat, msgs) in alerts | keys: ['rest']">
+                        <alert data-ng-repeat="alert in msgs" type="{{alert.type}}" close="closeAlert(cat, $index)"
+                               ng-init="autoDismiss(cat, $index, 5000)">{{alert.msg}}
+                        </alert>
+                    </div>
+                </div>
+            </div>
+            <h3 style="text-align: center"><em class="fa fa-shopping-cart"></em> Cart</h3>
+            <hr>
+            <div class="media">
+                <div class="media-left">
+                    <a href="javascript:void(0)">
+                        <img style="width: 8em" class="media-object" src="./images/undraw_breakfast_psiw.svg" alt="loading..">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">{{cart.restaurant_name}}</h4>
+                    <p>{{cart.restaurant_address}}</p>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <form ng-submit="createOrder(cust)" role="form" name="checkout_form" >
+                <div class="col-md-12">
+                    <div class="list-group">
+                        <span ng-repeat="(id, meal) in cart.cartItems" class="list-group-item">
+                            <span style="font-size: 14px">
+                                <strong>{{meal['meal_name'] | uppercase}}</strong> x {{meal['quantity']}}
+                            </span>
+                            <span class="pull-right text-muted small">
+                                <span style="font-size: 14px; font-weight: bold">{{meal.sub_order_amount}}/-</span>
+                            </span>
+                        </span>
+                        <span class="list-group-item">
+                            <span style="font-size: 14px">
+                                <strong>Delivery Charge</strong>
+                            </span>
+                            <span class="pull-right text-muted small">
+                                <span style="font-size: 14px; font-weight: bold">{{cart.delivery_charge}}/-</span>
+                            </span>
+                        </span>
+                        <span class="list-group-item">
+                            <span style="font-size: 14px">
+                                <strong>Packing Charges</strong>
+                            </span>
+                            <span class="pull-right text-muted small">
+                                <span style="font-size: 14px; font-weight: bold">{{cart.packing_charge}}/-</span>
+                            </span>
+                        </span>
+                        <span class="list-group-item">
+                            <span style="font-size: 14px">
+                                <strong>Tax ( @{{ restaurant.tax_percent}}%)</strong>
+                            </span>
+                            <span class="pull-right text-muted small">
+                                <span style="font-size: 14px; font-weight: bold">{{cart.tax_amount}}/-</span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="list-group">
+                        <span class="list-group-item">
+                            <span style="font-size: 18px">
+                                <strong> Total Amount</strong>
+                            </span>
+                            <span class="pull-right text-muted small">
+                                <span style="font-size: 18px; font-weight: bold">{{cart.total_bill_amount.toFixed(2)}}/-</span>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3><em class="fa fa-map-marker"></em> Delivery Address</h3>
+                    <div class="form-group col-md-6">
+                        <label>Name <em class="fa fa-asterisk"></em></label>
+                        <input type="text" ng-disabled="button.loading" ng-model="cust.customer_name" special-characters
+                               minlength="3" maxlength="50" class="form-control" name="username" id="name" autocomplete="off" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Mobile <em class="fa fa-asterisk"></em></label>
+                        <input type="number" ng-disabled="button.loading" ng-model="cust.customer_mobile"
+                               class="form-control" name="username" id="mobile" autocomplete="off" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Address <em class="fa fa-asterisk"></em></label>
+                        <input type="text" ng-disabled="button.loading" ng-model="cust.customer_address"
+                               maxlength="500" class="form-control" name="username" id="email" minlength="10" autocomplete="off" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Locality </label>
+                        <input type="text" ng-disabled="button.loading" ng-model="cust.customer_locality" placeholder="optional"
+                               minlength="5" maxlength="255" class="form-control" name="signUpPassword" autocomplete="off" id="set-customer_locality">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Special Request </label>
+                        <textarea rows="2" ng-disabled="button.loading" ng-model="cust.special_request"
+                                  placeholder="Any requests? We will inform the restaurant.."
+                                  minlength="5" maxlength="255" class="form-control" name="signUpPassword" autocomplete="off" id="set-special_request">
+                        </textarea>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Payment Mode <em class="fa fa-asterisk"></em></label>
+                        <select class="form-control" ng-model="cust.payment_mode" ng-disabled="button.loading" required>
+                            <option value="" selected disabled>--Choose Payment Mode--</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="Wallet">Wallet</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-12" style="text-align: right">
+                        <button class="btn btn-lg btn-success" type="submit" ng-disabled="checkout_form.$invalid || button.loading">
+                            {{ button.loading? 'Processing..': 'Pay' }} <em class="fa fa-arrow-circle-o-right"></em>
+                        </button>
+                        <button ng-disabled="button.loading" type="button" class="btn btn-lg btn-default" ng-click="close()">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</script>
+
