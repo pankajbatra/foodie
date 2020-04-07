@@ -52,9 +52,13 @@ module V1
         if params[:order_items_attributes]==nil || params[:order_items_attributes].length==0
           json_response({ message: 'No meals provided'}, 403)
         else
-          order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
-                                                                 :restaurant_id => restaurant.id, :placed_at =>Time.now))
-          json_response(order, :created)
+          if params[:total_bill_amount] < restaurant.min_delivery_amount
+            json_response({ message: 'Minimum order amount not provided'}, 403)
+          else
+            order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
+                                                                   :restaurant_id => restaurant.id, :placed_at =>Time.now))
+            json_response(order, :created)
+          end
         end
       else
         json_response({ message: 'You don\'t have permission for this operation'}, 403)
