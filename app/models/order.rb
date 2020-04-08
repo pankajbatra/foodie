@@ -169,7 +169,7 @@ class Order < ApplicationRecord
       end
 
       #validate tax amount
-      total_tax = (total_order_amount*restaurant.tax_percent)/100
+      total_tax = ((total_order_amount*restaurant.tax_percent)/100).round(2)
       unless tax_amount == total_tax
           errors.add(:tax_amount, 'is invalid')
       end

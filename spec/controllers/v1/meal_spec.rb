@@ -230,4 +230,40 @@ RSpec.describe 'Meals APIs', type: :request do
     end
   end
 
+  describe 'PATCH /meals/:meal_id' do
+    it 'request with valid restaurant login - out to stock' do
+      restaurant = Fabricate(:restaurant, owner: restaurant_user, create_meals: false)
+      jwt = confirm_and_login_user(restaurant_user)
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(201)
+
+      patch "#{url}/#{restaurant.meals[0].id}", params: {status: Meal.status.values[2]}, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(204)
+      restaurant.meals.reload
+      expect(restaurant.meals[0].status).to eq Meal.status.values[2]
+    end
+    it 'request with valid restaurant login - active' do
+      restaurant = Fabricate(:restaurant, owner: restaurant_user, create_meals: false)
+      jwt = confirm_and_login_user(restaurant_user)
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(201)
+
+      patch "#{url}/#{restaurant.meals[0].id}", params: {status: Meal.status.values[0]}, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(204)
+      restaurant.meals.reload
+      expect(restaurant.meals[0].status).to eq Meal.status.values[0]
+    end
+    it 'request with valid restaurant login - disabled' do
+      restaurant = Fabricate(:restaurant, owner: restaurant_user, create_meals: false)
+      jwt = confirm_and_login_user(restaurant_user)
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(201)
+
+      patch "#{url}/#{restaurant.meals[0].id}", params: {status: Meal.status.values[1]}, headers: {:Authorization => "Bearer #{jwt}" }
+      expect(response).to have_http_status(204)
+      restaurant.meals.reload
+      expect(restaurant.meals[0].status).to eq Meal.status.values[1]
+    end
+  end
+
 end
