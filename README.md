@@ -5,10 +5,9 @@
     Web Server: Rails with Nginx, Puma on Amazon EC2 Micro instance
     Backend: Mysql on Amazon RDS
     Deployment Automation: Capistrano
-    Auth impl: Devise, Rollify, CanCanCan, JWT
+    Auth impl: Devise, Rollify, JWT
     Backend Admin: rails_admin
     Functional testing: RSpec, Fabricator for fake data gen
-    Security: rack-attack
     * Ruby version: 2.7.0
     * Rails Version:6.0.2.2
 
@@ -50,13 +49,17 @@ An application for Food Delivery
 * Search for fake data: faker search food
 
 -- To Do ----
-* auto refresh orders and status
-* photos of meals
-* logos of restaurant
-* configure CI pipelines
-* restaurants sort by delivery time, rating, filter by cuisines (multi-select)
-* change password functionality
-* Email validation to activate account
-* Order email
-* rack-attack
-* swagger
+- auto refresh orders and status using pubnub
+- photos of meals
+- logos of restaurant
+- Group meals by cuisine in user display
+- Show Vegan, Chef Special (show Thumbs up icon), halal, contains egg (show egg icon) on meal. change veg and non-veg text to color icons. Show description and ingredients. spice level as icon (chilli)
+- Show rating on restaurant card and inside
+- configure CI pipelines
+- restaurants sort by delivery time, rating, filter by cuisines (multi-select)
+- change password functionality
+- Email validation to activate account
+- Order email
+- rack-attack
+- swagger
+- implement caching using identity_cache, redis

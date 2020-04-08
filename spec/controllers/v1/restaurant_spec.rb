@@ -294,6 +294,7 @@ RSpec.describe 'Restaurant APIs', type: :request do
       patch blacklist, params: {uid: customer.uid}, headers: {:Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       delete '/logout'
+      expect(response).to have_http_status(200)
       jwt = confirm_and_login_user(customer)
       get url, headers: {:Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(200)

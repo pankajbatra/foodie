@@ -1,4 +1,5 @@
 Fabricator(:restaurant) do
+  transient :create_meals => true
   name { Faker::Restaurant::name.truncate(100)}
   description { Faker::Restaurant::description.truncate(100)}
   status  { Restaurant.status.values[0] }
@@ -19,9 +20,11 @@ Fabricator(:restaurant) do
     cuisines = Cuisine.order('RAND()').limit(rand(2...3))
     cuisines.each do |cusi|
       Fabricate(:restaurants_cuisine, restaurant: restaurant, cuisine: cusi)
-      rand(3...5).times {
-       Fabricate(:meal, restaurant: restaurant, cuisine: cusi)
-      }
+      if transients[:create_meals]
+        rand(3...5).times {
+         Fabricate(:meal, restaurant: restaurant, cuisine: cusi)
+        }
+      end
     end
   }
 end

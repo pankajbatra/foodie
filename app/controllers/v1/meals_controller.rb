@@ -33,7 +33,7 @@ module V1
     def update
       if current_user.is_restaurant_owner? && current_user.restaurant != nil &&
           current_user.restaurant.status == Restaurant.status.values[0]
-        meal = Meal.find(params[:id])
+        meal = Meal.find_by_id(params[:id])
         if meal == nil || meal.restaurant.id != current_user.restaurant.id
           json_response({ message: 'Record not found' }, :not_found)
         else

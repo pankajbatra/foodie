@@ -77,3 +77,8 @@ gem 'cancancan', '~> 3.1'
 # gem 'sendgrid-ruby', '~> 4.0', '>= 4.0.6'
 # gem 'rack-attack', '~> 5.0', '>= 5.0.1'
 # gem 'ipcat'
+# papertrail
+# delayed_jobs
+# identity_cache
+# ar-octopus
+# redis
