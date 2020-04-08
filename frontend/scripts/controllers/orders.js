@@ -55,6 +55,7 @@ angular.module('sbAdminApp')
                 "oid": order.oid,
                 "status": status
             };
+            if (!data['payment_status'] || data['payment_status'] == null) delete data['payment_status'];
             $http({
                 method: 'PATCH',
                 url: toptal_config.API_URL + 'orders/update',
@@ -90,7 +91,7 @@ angular.module('sbAdminApp')
                 }
             })
                 .success(function(response, status, headers) {
-                    AlertsService.addAlert("orders", "success", "Meal status changed to " + order.status + " Successfully!");
+                    AlertsService.addAlert("orders", "success", "User " + user.name + " blacklisted Successfully!");
                     $scope.fetchOrders();
                 })
                 .error(function(response, status, headers) {

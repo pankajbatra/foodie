@@ -17,11 +17,13 @@ angular.module('sbAdminApp')
 
         $scope.showCancelMeal = false;
         $scope.mealChecks = {
-            regular: ['is_chef_special'],
+            regular: ['is_chef_special','is_halal'],
             veg: ['is_veg','is_vegan'],
             nonveg: ['contains_egg','contains_meat']
         };
-        $scope.meal = {};
+        $scope.meal = {
+            'is_chef_special':false,'is_halal':false,'is_veg':false,'is_vegan':false,'contains_egg':false,'contains_meat':false
+        };
         $scope.meals = {};
         $scope.restaurant = JSON.parse(localStorage.getItem('restaurant')) || [];
         $scope.init = function() {
@@ -75,7 +77,9 @@ angular.module('sbAdminApp')
         $scope.cancelCreateMeal = function() {
             $scope.createMeal = false;
             $scope.editMeal = false;
-            $scope.meal = {};
+            $scope.meal = {
+                'is_chef_special':false,'is_halal':false,'is_veg':false,'is_vegan':false,'contains_egg':false,'contains_meat':false
+            };
         };
 
         $scope.editMealDetails = function(meal) {

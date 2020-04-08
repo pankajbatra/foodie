@@ -233,13 +233,18 @@
                             <img src="./images/undraw_breakfast_psiw.svg" alt="loading...">
                             <div class="caption">
                                 <span ng-if="meal.is_veg || meal.is_vegan" style="float:right;">
-                                    <span class="badge" style="background-color:green;font-size: 15px;color: white">Veg</span>
+                                    <span class="badge" style="background-color:green;width: 20px; height: 20px;border-radius: 10px"> </span>
                                 </span>
                                 <span ng-if="meal.contains_egg || meal.contains_meat" style="float:right;">
-                                    <span class="badge" style="background-color:red;font-size: 15px;color: white">Non-Veg</span>
+                                    <span class="badge" style="background-color:red;width: 20px; height: 20px;border-radius: 10px"> </span>
                                 </span>
-                                <h4>{{meal.name}}</h4>
+                                <h4>{{meal.name}}
+                                    <span ng-if="meal['is_chef_special']" style="color: orange;margin-left: 5px;" aria-label="Chef Recommended">
+                                    <em style="font-size: 25px" class="fa fa-thumbs-up"></em>
+                                    </span>
+                                </h4>
                                 <p style="color: dimgray">{{meal.course}} ({{meal.cuisine.name | uppercase}})</p>
+
                                 <span style="color: grey">{{meal.description}}</span>
                                 <span style="color: grey; float: right">
                                      <div class="quantity">
@@ -406,7 +411,17 @@
                     <div class="form-group col-md-6">
                         <label>Locality </label>
                         <input type="text" ng-disabled="button.loading" ng-model="cust.customer_locality" placeholder="optional"
-                               minlength="5" maxlength="255" class="form-control" name="signUpPassword" autocomplete="off" id="set-customer_locality">
+                               minlength="5" maxlength="255" class="form-control" name="signUpPassword" autocomplete="off" id="set-customer_marker">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Latitude </label>
+                        <input type="text" ng-disabled="button.loading" ng-model="cust.latitude" placeholder="optional"
+                               class="form-control" name="signUpPassword" autocomplete="off" id="customer_marker_locality">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Longitude </label>
+                        <input type="text" ng-disabled="button.loading" ng-model="cust.longitude" placeholder="optional"
+                               class="form-control" name="signUpPassword" autocomplete="off" id="set-customer_marker-location">
                     </div>
                     <div class="form-group col-md-6">
                         <label>Special Request </label>
@@ -433,8 +448,29 @@
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
+        <div class="panel">
+            <div class="panel-body">
+                <ui-gmap-google-map center="map.center" zoom="map.zoom">
+                    <ui-gmap-layer type="TrafficLayer"></ui-gmap-layer>
+                    <ui-gmap-marker coords="customer_marker.coords" options="customer_marker.options"  icon="customer_marker.icon"
+                                    events="customer_marker.events" idkey="'customer_marker'">
+                    </ui-gmap-marker>
+                </ui-gmap-google-map>
+            </div>
         </div>
     </div>
 </script>
-
+<style>
+    .pac-container {
+        z-index: 100000;
+    }
+    modal-content> panel {
+        max-height: 255px;
+    }
+    .row>div {
+        margin-bottom: 0 !important;
+    }
+    label,p {
+        font-weight:500;
+    }
+</style>

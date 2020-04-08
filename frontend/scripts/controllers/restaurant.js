@@ -7,7 +7,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('restaurantCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope, $position, $rootScope, $http, toptal_config, AlertsService,$timeout) {
+    .controller('restaurantCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope,uiGmapIsReady, $position, $rootScope, $http, toptal_config, AlertsService,$timeout) {
 
         // set page title
         $rootScope.ToptalPageTitle = 'Restaurant Details';
@@ -31,6 +31,9 @@ angular.module('sbAdminApp')
         };
         $scope.hasPermissionToRestaurant = $rootScope.hasPermissionTo('restaurant');
         $scope.storedRestaurant = JSON.parse(localStorage.getItem('restaurant')) || {};
+        if ($scope.storedRestaurant && $scope.storedRestaurant.cuisines) {
+            $scope.storedRestaurant.cuisine_ids = $scope.storedRestaurant.cuisines.map(c=>c['id']);
+        }
         if (!$scope.storedRestaurant.rid) {
             $scope.createUser = true;
         }
@@ -128,7 +131,7 @@ angular.module('sbAdminApp')
             $scope.restaurant =$scope.restaurantCopy;
         };
         $scope.runChecks = function(meal) {
-            if ($scope.cart.rid && $scope.restaurant.rid !==$scope.cart.rid) {
+            if ($scope.cart.cartItems.length && $scope.cart.rid && $scope.restaurant.rid !==$scope.cart.rid) {
                 $modal.open({
                     animation: true,
                     templateUrl: 'modal-update-confirmation.html',
@@ -296,13 +299,37 @@ angular.module('sbAdminApp')
                 AlertsService.addAlert("meal", "danger", 'Minimum order amount is ' + $scope.cart.rest_min_del_amount + '/-');
                 return;
             }
-            console.log($scope.cart);
             $modal.open({
                 animation: true,
                 templateUrl: 'modal-checkout.html',
                 size: 'lg',
                 scope: $scope
             });
+            $timeout(() =>{
+            uiGmapIsReady.promise().then(function (maps) {
+                $scope.customer_marker = {
+                    id: 1,
+                    coords: {
+                        latitude: 28.408996,
+                        longitude: 77.046829
+                    },
+                    options: {
+                        labelClass: "marker-label",
+                        labelAnchor: "50 60",
+                        labelContent: "Drag Restaurant",
+                        draggable: true,
+                        cursor: 'pointer',
+                        animation: google.maps.Animation.DROP
+                    },
+                    events: {
+                        dragend: function(marker, eventName, args) {
+                            $scope.cust.latitude = marker.getPosition().lat();
+                            $scope.cust.longitude = marker.getPosition().lng();
+                        }
+                    },
+                    icon: ConstantService.icons.customer
+                };
+            })},1000);
         };
         $scope.restaurantDetailPage = function (rest) {
             if (rest.open_for_delivery_now)

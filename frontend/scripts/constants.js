@@ -1,5 +1,6 @@
 var ConstantService = {
     icons: {
-        'restaurant': 'images/restaurant.png'
+        'restaurant': 'images/restaurant.png',
+        'customer': 'images/customer.png'
     }
 };
