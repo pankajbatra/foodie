@@ -21,10 +21,10 @@ ActiveRecord::Schema.define(version: 2020_04_06_185026) do
     t.index ["name"], name: "index_cuisines_on_name", unique: true
   end
 
-  create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "jwt_blacklists", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp"
-    t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+    t.index ["jti"], name: "index_jwt_blacklists_on_jti"
   end
 
   create_table "meals", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
