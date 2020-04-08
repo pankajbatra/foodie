@@ -120,7 +120,7 @@ module V1
                 else
                   @order.update!({bill_number: params[:bill_number],
                                   remarks: params[:remarks], eta_after_confirm: params[:eta_after_confirm],
-                                  payment_status: params[:payment_status],
+                                  payment_status: (params[:payment_status]!=nil ? params[:payment_status] : @order.payment_status),
                                   :confirmed_at =>Time.now, :status => params[:status]})
                   head :no_content
                 end
@@ -133,7 +133,7 @@ module V1
                 else
                   @order.update!({bill_number: params[:bill_number],
                                   remarks: params[:remarks],
-                                  payment_status: params[:payment_status],
+                                  payment_status: (params[:payment_status]!=nil ? params[:payment_status] : @order.payment_status),
                                   :dispatched_at =>Time.now, :status => params[:status]})
                   head :no_content
                 end
@@ -145,7 +145,7 @@ module V1
                   json_response({ message: 'You don\'t have permission for this operation: Delivered'}, 403)
                 else
                   @order.update!({remarks: params[:remarks],
-                                  payment_status: params[:payment_status],
+                                  payment_status: (params[:payment_status]!=nil ? params[:payment_status] : @order.payment_status),
                                   :delivered_at =>Time.now, :status => params[:status]})
                   head :no_content
                 end
@@ -199,8 +199,7 @@ module V1
     end
 
     def update_params
-      params.permit(:oid, :status, :cancel_reason, :remarks, :bill_number, :payment_status, :eta_after_confirm,
-                    :payment_status)
+      params.permit(:oid, :status, :cancel_reason, :remarks, :bill_number, :payment_status, :eta_after_confirm)
     end
 
     def show_params

@@ -168,7 +168,7 @@
             <div ng-if="!viewRestaurantDetails" class="col-md-12">
                 <h2 style="padding: 14px">Top Restuarants</h2>
                 <br>
-                <div class="col-md-3 col-sm-6" ng-repeat="rest in restaurants" style="padding: 10px;"
+                <div class="col-md-3 col-sm-6" ng-repeat="rest in restaurants | orderBy: ['-open_for_delivery_now', 'name']" style="padding: 10px;"
                      ng-class="{'disabled-div' : !rest.open_for_delivery_now, 'rest-div': rest.open_for_delivery_now}">
                     <div ng-click="restaurantDetailPage(rest)" class="thumbnail">
                         <img src="./images/undraw_breakfast_psiw.svg" alt="loading...">
