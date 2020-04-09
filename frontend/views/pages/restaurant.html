@@ -227,7 +227,7 @@
                         </div>
                     </div>
                     <h2 style="padding: 14px">Recommended Meals</h2>
-                    <div class="col-md-3 col-sm-6" ng-repeat="meal in restaurant.meals" style="padding: 10px;"
+                    <div class="col-md-3 col-sm-6" ng-repeat="meal in restaurant.meals | orderBy: 'name'" style="padding: 10px;"
                          ng-class="{'disabled-div' : meal.status=='OutOfStock'}">
                         <div class="thumbnail">
                             <img src="./images/undraw_breakfast_psiw.svg" alt="loading...">
