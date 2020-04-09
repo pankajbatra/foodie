@@ -61,5 +61,6 @@ An application for Food Delivery
 - Email validation to activate account
 - Order email
 - rack-attack
+- Sentry integration
 - swagger
 - implement caching using identity_cache, redis
