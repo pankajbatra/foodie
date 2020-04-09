@@ -14,7 +14,7 @@ Fabricator(:order) do
 
   placed_at { Time.now }
   bill_number { Faker::Invoice::reference }
-  special_request { Faker::Types::rb_string(words: 2) }
+  special_request { Faker::Types::rb_string(words: 3) }
 
   delivery_charge { |attrs| "#{attrs[:restaurant].delivery_charge}" }
   packing_charge { |attrs| "#{attrs[:restaurant].packing_charge}" }

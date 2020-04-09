@@ -89,7 +89,7 @@ module V1
 
                   # No cancellation reason provided or customerCancel reason provided
                   if params[:cancel_reason] == nil || params[:cancel_reason] == Order.cancel_reason.values[0]
-                    json_response({ message: 'No/Invalid Cancellation reason provided'}, 403)
+                    json_response({ message: 'No/Invalid cancellation reason provided'}, 403)
 
                   # order is in placed or processing, so can't send cancel reason as damaged in transit or undelivered
                   elsif (@order.status == Order.status.values[0] || @order.status == Order.status.values[1]) &&
