@@ -270,6 +270,11 @@ RSpec.describe Restaurant, type: :model do
     expect(subject).to_not be_valid
   end
 
+  it 'status should be valid value' do
+    subject.status = 'inactive'
+    expect(subject).to_not be_valid
+  end
+
   context '.' do
     before {Fabricate(:restaurant, name: 'Spice Box', locality: 'Broadway Street')}
     it 'restaurant name should be unique for locality' do

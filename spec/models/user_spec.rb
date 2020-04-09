@@ -43,6 +43,11 @@ RSpec.describe User, type: :model do
     end
   end
 
+  it 'status should be valid value' do
+    subject.status = 'inactive'
+    expect(subject).to_not be_valid
+  end
+
   it 'mobile should be present' do
     subject.mobile = nil
     expect(subject).to_not be_valid
