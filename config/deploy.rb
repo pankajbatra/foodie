@@ -95,6 +95,19 @@ namespace :deploy do
     end
   end
 
+  desc 'Runs rake db:seed for seed data'
+  # => [:set_rails_env]
+  task :seed do
+    # on primary fetch(:migration_role) do
+    on roles(:app), in: :sequence, wait: 5 do
+      within release_path do
+        # with rails_env: fetch(:rails_env) do
+          execute :rake, "db:seed"
+        # end
+      end
+    end
+  end
+
   after :publishing, :fix_permissions
 
   # desc 'Restart application'
