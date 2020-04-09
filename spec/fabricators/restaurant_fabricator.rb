@@ -14,7 +14,7 @@ Fabricator(:restaurant) do
   latitude { Faker::Address.latitude }
   longitude { Faker::Address.longitude }
 
-  owner { Fabricate(:user) }
+  owner { Fabricate(:restaurant_owner) }
 
   after_create { |restaurant, transients|
     cuisines = Cuisine.order('RAND()').limit(rand(2...3))

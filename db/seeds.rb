@@ -12,10 +12,21 @@
 #   Role.create! name: role_name
 # end
 
-10.times {
-  customer = Fabricate(:user)
-  restaurant = Fabricate(:restaurant)
-  2.times{
-    Fabricate(:order, restaurant: restaurant, user: customer)
+if Rails.env.test?
+  %w(american chinese pizza italian indian japanese mexican thai korean lebanese).each do |name|
+    Cuisine.create! name: name
+  end
+  %w(restaurant customer).each do |role_name|
+    Role.create! name: role_name
+  end
+end
+
+if Rails.env.production?
+  10.times {
+    customer = Fabricate(:user)
+    restaurant = Fabricate(:restaurant)
+    2.times{
+      Fabricate(:order, restaurant: restaurant, user: customer)
+    }
   }
-}
+end
