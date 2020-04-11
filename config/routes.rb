@@ -13,10 +13,10 @@ Rails.application.routes.draw do
                registrations: 'registrations'
              }
   scope module: :v1, constraints: ApiVersion.new('v1', true) do
-    resources :restaurants
-    resources :cuisines
-    resources :meals
-    resources :orders
+    resources :restaurants, except: [:destroy]
+    resources :cuisines, only: [:index]
+    resources :meals, only: [:create, :update, :index]
+    resources :orders, except: [:destroy]
     patch 'blacklist' => 'restaurants#blacklist', :as => :blacklist
   end
 end

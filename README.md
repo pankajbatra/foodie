@@ -44,7 +44,7 @@ An application for Food Delivery
 
 * Search for fake data: faker search food
 
-* Using reeks, rubocop
+* Using reek, rubocop, rails_best_practices, simplecov
 
 -- To Do ----
 - auto refresh orders and status using pubnub

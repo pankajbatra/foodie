@@ -83,3 +83,4 @@ gem 'cancancan', '~> 3.1'
 # identity_cache
 # ar-octopus
 # redis
+gem 'simplecov', require: false, group: :test
