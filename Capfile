@@ -10,16 +10,16 @@ install_plugin Capistrano::SCM::Git
 require 'capistrano/rails/migrations'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
-Dir.glob("lib/capistrano/tasks/*.rake").each {|r| import r}
+Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
 
 require 'capistrano/bundler'
 # require 'capistrano/rails'
 require 'capistrano/file-permissions'
-#require 'whenever/capistrano'
+# require 'whenever/capistrano'
 require 'capistrano/rbenv'
 require 'capistrano/rake'
-#require 'capistrano/delayed_job'
-#require 'capistrano/monit'
+# require 'capistrano/delayed_job'
+# require 'capistrano/monit'
 require 'capistrano/puma'
 require 'capistrano/ssh_doctor'
 install_plugin Capistrano::Puma # Default puma tasks

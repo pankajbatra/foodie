@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Get cuisines', type: :request do
-  let!(:user) {Fabricate(:user)}
+  let!(:user) { Fabricate(:user) }
 
   describe 'GET /cuisines' do
     it 'request without JWT token' do
@@ -12,7 +12,7 @@ RSpec.describe 'Get cuisines', type: :request do
 
     it 'responds with JSON with JWT' do
       jwt = confirm_and_login_user(user)
-      get '/cuisines', headers: {:Authorization => "Bearer #{jwt}"}
+      get '/cuisines', headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(200)
       expect(json.size).to eq(10)
       expect(json[0]['name']).to eq 'american'

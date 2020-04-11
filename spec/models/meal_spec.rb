@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Meal, type: :model do
-  let!(:restaurant) {Fabricate(:restaurant, create_meals: false)}
-  subject {Fabricate(:meal, restaurant: restaurant, cuisine: Cuisine.first)}
+  let!(:restaurant) { Fabricate(:restaurant, create_meals: false) }
+  subject { Fabricate(:meal, restaurant: restaurant, cuisine: Cuisine.first) }
 
-  before {subject.save}
+  before { subject.save }
 
   it 'name should be present' do
     subject.name = nil
@@ -119,5 +119,4 @@ RSpec.describe Meal, type: :model do
     subject.contains_egg = true
     expect(subject).to_not be_valid
   end
-
 end

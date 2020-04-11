@@ -18,5 +18,4 @@ class OrderSerializer < ActiveModel::Serializer
   def is_customer?
     scope.has_role? :customer
   end
-
 end

@@ -16,7 +16,7 @@ class ApplicationController < ActionController::API
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
-      format.json {head :forbidden, content_type: 'application/json'}
+      format.json { head :forbidden, content_type: 'application/json' }
     end
   end
 end

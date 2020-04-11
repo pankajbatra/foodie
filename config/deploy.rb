@@ -50,21 +50,20 @@ append :linked_dirs, 'public/uploads'
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-
 set :rbenv_type, :user # or :system, depends on your rbenv setup
 set :rbenv_ruby, '2.7.0'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails puma pumactl}
 set :rbenv_roles, :all # default value
-#set :whenever_roles, ->{:web}
+# set :whenever_roles, ->{:web}
 
-#set :delayed_job_monit_enabled, true
+# set :delayed_job_monit_enabled, true
 set :templates_path, 'config/deploy/templates'
 # set :delayed_job_server_roles, "[:app]"
 # set :delayed_job_service, -> { "delayed_job_#{fetch(:application)}_#{fetch(:stage)}" }
 
 set :puma_preload_app, false
-set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock" #accept array for multi-bind
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock" # accept array for multi-bind
 set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
 set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
@@ -81,7 +80,6 @@ set :puma_init_active_record, true
 # set :nginx_use_ssl, true
 
 namespace :deploy do
-
   # Rake::Task["deploy:check:make_linked_dirs"].clear_actions
   # Rake::Task["deploy:check:linked_files"].clear_actions
   # Rake::Task["deploy:symlink:linked_files"].clear_actions
@@ -138,4 +136,3 @@ namespace :deploy do
 
   after :finishing, 'deploy:cleanup'
 end
-

@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Cuisine, type: :model do
+  subject { Cuisine.new(name: 'Americano') }
 
-  subject {Cuisine.new(name: 'Americano')}
-
-  before {subject.save}
+  before { subject.save }
 
   it 'name should be present' do
     subject.name = nil

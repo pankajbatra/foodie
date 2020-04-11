@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Order, type: :model do
-  subject {Fabricate(:order)}
+  subject { Fabricate(:order) }
 
-  before {subject.save}
+  before { subject.save }
 
   it 'status should be valid value' do
     subject.status = 'inactive'
@@ -150,7 +150,6 @@ RSpec.describe Order, type: :model do
     expect(subject).to_not be_valid
   end
 
-
   it 'customer_mobile should be present' do
     subject.customer_mobile = nil
     expect(subject).to_not be_valid
@@ -170,7 +169,6 @@ RSpec.describe Order, type: :model do
     subject.customer_mobile = '99999999AB99'
     expect(subject).to_not be_valid
   end
-
 
   it 'customer_address should be present' do
     subject.customer_address = nil
@@ -212,7 +210,6 @@ RSpec.describe Order, type: :model do
     expect(subject).to_not be_valid
   end
 
-
   it 'customer_latitude should not be too short' do
     subject.customer_latitude = -90.1
     expect(subject).to_not be_valid
@@ -242,6 +239,4 @@ RSpec.describe Order, type: :model do
     subject.customer_longitude = '9A'
     expect(subject).to_not be_valid
   end
-
 end
-

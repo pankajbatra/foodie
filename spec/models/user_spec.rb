@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject {Fabricate(:user)}
+  subject { Fabricate(:user) }
 
-  before {subject.save}
+  before { subject.save }
 
   it 'name should be present' do
     subject.name = nil
@@ -36,7 +36,7 @@ RSpec.describe User, type: :model do
   end
 
   context '.' do
-    before {Fabricate(:user, email: 'test@example.com')}
+    before { Fabricate(:user, email: 'test@example.com') }
     it 'email should be unique' do
       subject.email = 'test@example.com'
       expect(subject).to be_invalid
