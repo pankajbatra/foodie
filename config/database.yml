@@ -14,11 +14,12 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: <%= Rails.application.credentials.dev_db_password %>
+  password:
   host: localhost
 
 development:
   <<: *default
+  password: <%= Rails.application.credentials.dev_db_password %>
   database: foodie_development
 
 # Warning: The database defined as "test" will be erased and
