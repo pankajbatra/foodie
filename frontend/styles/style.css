@@ -134,13 +134,13 @@ h1.no-margin, .h1.no-margin, h2.no-margin, .h2.no-margin, h3.no-margin, .h3.no-m
 .navbar-header a.navbar-brand{
   width: 250px;
 }
-h3.toptal-page-title {
+h3.foodie-page-title {
   display: flex;
   margin-bottom: 0;
   margin-left: 30px;
   margin-top: 10px;
 }
-.firefox h3.toptal-page-title {
+.firefox h3.foodie-page-title {
   display: inline-block;
 }
 .icon {

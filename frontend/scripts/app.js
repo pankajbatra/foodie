@@ -14,7 +14,7 @@ angular
     ])
     .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider','$httpProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider,$httpProvider) {
 
-        $httpProvider.interceptors.push(function ($q, $location,toptal_config) {
+        $httpProvider.interceptors.push(function ($q, $location,foodie_config) {
             var cachedRequest = null;
             var smeCachedRequest = null;
             return {
@@ -38,7 +38,7 @@ angular
                             console.log("redirecting to login page..");
                             sessionStorage.clear();
                             localStorage.clear();
-                            toptal_config.API_KEY = '';
+                            foodie_config.API_KEY = '';
                             $location.path('/login');
                             return rejection;
                         }

@@ -7,10 +7,10 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('restaurantCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope,uiGmapIsReady, $position, $rootScope, $http, toptal_config, AlertsService,$timeout) {
+    .controller('restaurantCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope,uiGmapIsReady, $position, $rootScope, $http, foodie_config, AlertsService,$timeout) {
 
         // set page title
-        $rootScope.ToptalPageTitle = 'Restaurant Details';
+        $rootScope.FoodiePageTitle = 'Restaurant Details';
 
         $rootScope.getAuthorization();
         $scope.createUser = false;
@@ -44,15 +44,15 @@ angular.module('sbAdminApp')
                 if ($scope.storedRestaurant && $scope.storedRestaurant.rid) $timeout(() => $scope.fetchRestaurant($scope.storedRestaurant.rid),0);
             }
             else {
-                $rootScope.ToptalPageTitle = 'Restaurants';
+                $rootScope.FoodiePageTitle = 'Restaurants';
                 if (!$scope.viewRestaurantDetails) $scope.fetchRestaurantsForCustomer();
             }
         };
         $scope.button = {
             loading: false
         };
-        $scope.max_size = toptal_config.max_size;
-        $scope.page_size = toptal_config.page_size;
+        $scope.max_size = foodie_config.max_size;
+        $scope.page_size = foodie_config.page_size;
         $scope.currentPage = 1;
         $scope.totalItems = 0;
         $scope.restaurants = [];
@@ -60,7 +60,7 @@ angular.module('sbAdminApp')
         $scope.fetchCuisines = function() {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'cuisines'
+                url: foodie_config.API_URL + 'cuisines'
             })
                 .success(function(response, status, headers) {
                     $scope.cuisines = response;
@@ -77,7 +77,7 @@ angular.module('sbAdminApp')
         $scope.fetchRestaurant = function(id, isCustomer) {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'restaurants/get?rid=' + id
+                url: foodie_config.API_URL + 'restaurants/get?rid=' + id
             })
                 .success(function(response, status, headers) {
                     if (response && response.meals.length) {
@@ -109,7 +109,7 @@ angular.module('sbAdminApp')
         $scope.fetchRestaurantsForCustomer = function() {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'restaurants?page=' + $scope.currentPage
+                url: foodie_config.API_URL + 'restaurants?page=' + $scope.currentPage
             })
                 .success(function(response, status, headers) {
                     if (response.length){
@@ -222,7 +222,7 @@ angular.module('sbAdminApp')
             $scope.button.loading = true;
             $http({
                 method: 'POST',
-                url: toptal_config.API_URL + '/orders',
+                url: foodie_config.API_URL + '/orders',
                 data: JSON.stringify(order)
             })
                 .success(function(response, status, headers) {
@@ -260,7 +260,7 @@ angular.module('sbAdminApp')
             $scope.button.loading = true;
             $http({
                 method: $scope.storedRestaurant.rid? 'PUT':'POST',
-                url: toptal_config.API_URL + ($scope.storedRestaurant.rid? 'restaurants/update' : 'restaurants'),
+                url: foodie_config.API_URL + ($scope.storedRestaurant.rid? 'restaurants/update' : 'restaurants'),
                 data: JSON.stringify(data)
             })
                 .success(function(response, status, headers) {
@@ -280,7 +280,7 @@ angular.module('sbAdminApp')
             let openStatus = status? ' Opened': ' Closed';
             $http({
                 method: 'PATCH',
-                url: toptal_config.API_URL + 'restaurants/open',
+                url: foodie_config.API_URL + 'restaurants/open',
                 data: {
                     "rid" : $scope.restaurant.rid,
                     "open_for_delivery_now": status

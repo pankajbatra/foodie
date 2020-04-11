@@ -6,7 +6,7 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
-angular.module('sbAdminApp').controller('LoginCtrl', function($location, $route,$scope,$position, $rootScope, $http, toptal_config, AlertsService) {
+angular.module('sbAdminApp').controller('LoginCtrl', function($location, $route,$scope,$position, $rootScope, $http, foodie_config, AlertsService) {
 
 	$scope.button = {
 		loading: false,
@@ -29,7 +29,7 @@ angular.module('sbAdminApp').controller('LoginCtrl', function($location, $route,
 		};
   		$http({
 			method: 'POST',
-			url: toptal_config.API_URL + 'login',
+			url: foodie_config.API_URL + 'login',
 			data: {
 				"user": loginCreds
 			}
@@ -64,7 +64,7 @@ angular.module('sbAdminApp').controller('LoginCtrl', function($location, $route,
 		$rootScope.sessionKey = headers('authorization');
 		$rootScope.userDetails = JSON.stringify(response);
 		$rootScope.getLoggedinDetails($rootScope.userDetails);
-		$rootScope.setToptalConfig($rootScope.sessionKey);
+		$rootScope.setFoodieConfig($rootScope.sessionKey);
 		$location.path('dashboard/home');
 	}
 	function isValidMobile(mobile) {
@@ -86,7 +86,7 @@ angular.module('sbAdminApp').controller('LoginCtrl', function($location, $route,
 		$scope.button.loading = true;
   		$http({
 			method: 'POST',
-			url: toptal_config.API_URL + 'signup',
+			url: foodie_config.API_URL + 'signup',
 			data: {
 				"user": signUpData
 			}

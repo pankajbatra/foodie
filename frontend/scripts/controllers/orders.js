@@ -7,15 +7,15 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('ordersCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope, $position, $rootScope, $http, toptal_config, AlertsService) {
+    .controller('ordersCtrl', function($state,$stateParams, $modal,$modalStack, $location, $route, $scope, $position, $rootScope, $http, foodie_config, AlertsService) {
 
         // set page title
-        $rootScope.ToptalPageTitle = 'Orders';
+        $rootScope.FoodiePageTitle = 'Orders';
         $rootScope.getAuthorization();
         $scope.modifiedOrder = {};
 
-        $scope.max_size = toptal_config.max_size;
-        $scope.page_size = toptal_config.page_size;
+        $scope.max_size = foodie_config.max_size;
+        $scope.page_size = foodie_config.page_size;
         $scope.isRestaurant = JSON.parse(localStorage.getItem('restaurant'));
 
         $scope.order = {};
@@ -34,7 +34,7 @@ angular.module('sbAdminApp')
         $scope.fetchOrders = function() {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'orders?page=' + $scope.currentPage
+                url: foodie_config.API_URL + 'orders?page=' + $scope.currentPage
             })
                 .success(function(response, status, headers) {
                     if (response.length>=20) $scope.totalItems = 22;
@@ -58,7 +58,7 @@ angular.module('sbAdminApp')
             if (!data['payment_status'] || data['payment_status'] == null) delete data['payment_status'];
             $http({
                 method: 'PATCH',
-                url: toptal_config.API_URL + 'orders/update',
+                url: foodie_config.API_URL + 'orders/update',
                 data: JSON.stringify(data)
             })
                 .success(function(response, status, headers) {
@@ -85,7 +85,7 @@ angular.module('sbAdminApp')
             if (!user.uid) return;
             $http({
                 method: 'PATCH',
-                url: toptal_config.API_URL + 'blacklist',
+                url: foodie_config.API_URL + 'blacklist',
                 data: {
                     "uid" : user.uid
                 }

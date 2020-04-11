@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('sbAdminApp').controller('MainCtrl', function($state, $location, $scope,$http, $position, $rootScope, toptal_config, deviceDetector) {
+angular.module('sbAdminApp').controller('MainCtrl', function($state, $location, $scope,$http, $position, $rootScope, foodie_config, deviceDetector) {
     $rootScope.getAuthorization = function(){
         if(sessionStorage.getItem('auth-token') == null) {
             $location.path('/login');
@@ -10,12 +10,12 @@ angular.module('sbAdminApp').controller('MainCtrl', function($state, $location, 
     $rootScope.logout = function(){
         $http({
             method: 'DELETE',
-            url: toptal_config.API_URL + 'logout'
+            url: foodie_config.API_URL + 'logout'
         })
         .success(function(response, status, headers) {
             sessionStorage.clear();
             localStorage.clear();
-            toptal_config.API_KEY = '';
+            foodie_config.API_KEY = '';
             window.location =  '#/login';
         })
         .error(function(response, status, headers, config) {
@@ -24,9 +24,9 @@ angular.module('sbAdminApp').controller('MainCtrl', function($state, $location, 
             console.log(response);
         });
     };
-    $rootScope.setToptalConfig = function(arg){
+    $rootScope.setFoodieConfig = function(arg){
         if(arg !== null && arg !== undefined){
-            toptal_config.API_KEY = arg;
+            foodie_config.API_KEY = arg;
         }
     };
 

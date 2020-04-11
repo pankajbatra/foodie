@@ -1,15 +1,15 @@
 # config valid for current version and patch releases of Capistrano
 # lock "~> 3.10.2"
 
-set :application, "toptal-food"
-set :repo_url, "git@git.toptal.com:Ivan-Ilijasic/pankaj-batra.git"
+set :application, "foodie"
+set :repo_url, "https://github.com/pankajbatra/foodie.git"
 # set :ssh_options, { :forward_agent => true }
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/home/ubuntu/apps/toptal-food"
+set :deploy_to, "/home/ubuntu/apps/foodie"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh

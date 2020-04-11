@@ -19,7 +19,7 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module ToptalFood
+module Foodie
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
@@ -47,6 +47,6 @@ module ToptalFood
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Flash
     config.middleware.use Rack::MethodOverride
-    config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_toptal_food_session" }
+    config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_foodie_session" }
   end
 end

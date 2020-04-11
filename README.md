@@ -1,9 +1,5 @@
 # README
 
-    Frontend : https://foodie.croftr.com/
-    Backend API: https://toptal.croftr.com/ 
-    Web Server: Rails with Nginx, Puma on Amazon EC2 Micro instance
-    Backend: Mysql on Amazon RDS
     Deployment Automation: Capistrano
     Auth impl: Devise, Rollify, JWT
     Backend Admin: rails_admin

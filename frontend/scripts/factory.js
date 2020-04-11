@@ -1,8 +1,8 @@
 var app = angular.module('sbAdminApp');
-app.factory('toptal_config', function($rootScope,$window) {
+app.factory('foodie_config', function($rootScope,$window) {
 	//console.log(sessionStorage.getItem('auth-token'));
     return {
-        API_URL:'https://toptal.croftr.com/',
+        API_URL:'http://localhost:3000/',
       	API_KEY: sessionStorage.getItem('auth-token'),
         siteurl : "http://localhost/hydra/app/#/",
         page_size : 20,

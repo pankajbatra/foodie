@@ -11,7 +11,7 @@ angular.module('sbAdminApp')
 		$rootScope.getAuthorization();
 		$scope.hasPermissionTo = $rootScope.hasPermissionTo;
 		$rootScope.userRest = JSON.parse(localStorage.getItem('restaurant'));
-		$rootScope.ToptalPageTitle = 'Toptal Dashboard';
+		$rootScope.FoodiePageTitle = 'Foodie Dashboard';
 		if (!$rootScope.userRest) {
 			$state.go('dashboard.restaurant');
 		} else {

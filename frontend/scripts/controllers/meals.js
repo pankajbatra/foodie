@@ -7,10 +7,10 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('mealsCtrl', function($state,$stateParams, $modal, $location, $route, $scope, $position, $rootScope, $http, toptal_config, AlertsService) {
+    .controller('mealsCtrl', function($state,$stateParams, $modal, $location, $route, $scope, $position, $rootScope, $http, foodie_config, AlertsService) {
 
         // set page title
-        $rootScope.ToptalPageTitle = 'Meals';
+        $rootScope.FoodiePageTitle = 'Meals';
         $rootScope.getAuthorization();
         $scope.createMeal = false;
         $scope.editMeal = false;
@@ -40,7 +40,7 @@ angular.module('sbAdminApp')
         $scope.fetchCuisines = function() {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'cuisines'
+                url: foodie_config.API_URL + 'cuisines'
             })
                 .success(function(response, status, headers) {
                     $scope.cuisines = response;
@@ -53,7 +53,7 @@ angular.module('sbAdminApp')
         $scope.fetchMeals = function() {
             $http({
                 method: 'GET',
-                url: toptal_config.API_URL + 'meals?rid=' + $scope.restaurant.rid
+                url: foodie_config.API_URL + 'meals?rid=' + $scope.restaurant.rid
             })
                 .success(function(response, status, headers) {
                     $scope.meals = response;
@@ -96,7 +96,7 @@ angular.module('sbAdminApp')
 
             $http({
                 method: data.id? 'PUT':'POST',
-                url: toptal_config.API_URL + (data.id? 'meals/'+data.id : 'meals'),
+                url: foodie_config.API_URL + (data.id? 'meals/'+data.id : 'meals'),
                 data: JSON.stringify(data)
             })
                 .success(function(response, status, headers) {
@@ -118,7 +118,7 @@ angular.module('sbAdminApp')
             const openStatus = meal.setStatus? 'Active': 'OutOfStock';
             $http({
                 method: 'PATCH',
-                url: toptal_config.API_URL + 'meals/' + meal.id,
+                url: foodie_config.API_URL + 'meals/' + meal.id,
                 data: {
                     "status": openStatus
                 }
