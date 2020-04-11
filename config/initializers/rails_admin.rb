@@ -13,7 +13,8 @@ RailsAdmin.config do |config|
 
   config.authorize_with do
     authenticate_or_request_with_http_basic('Login') do |username, password|
-      username == Rails.application.credentials.rails_admin_user && password == Rails.application.credentials.rails_admin_pass
+      username == Rails.application.credentials.rails_admin_user &&
+        password == Rails.application.credentials.rails_admin_pass
     end
   end
   ## == Cancan ==

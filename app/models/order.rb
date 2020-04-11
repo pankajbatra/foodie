@@ -4,8 +4,18 @@ class Order < ApplicationRecord
   enumerize :status, in: [:Placed, :Processing, :InRoute, :Delivered, :Received, :Cancelled], default: :Placed
   enumerize :payment_mode, in: [:Cash, :Card, :Wallet], default: :Cash
   enumerize :payment_status, in: [:Pending, :Paid, :Settled], default: :Pending
-  enumerize :cancel_reason, in: [:CustomerCancel, :OutOfStock, :StoreClosed, :DeliveryPerson, :InvalidAddress,
-                                 :OutOfDeliveryArea, :PaymentFailed, :DamagedInTransit, :UnDelivered]
+  enumerize :cancel_reason,
+            in: [
+              :CustomerCancel,
+              :OutOfStock,
+              :StoreClosed,
+              :DeliveryPerson,
+              :InvalidAddress,
+              :OutOfDeliveryArea,
+              :PaymentFailed,
+              :DamagedInTransit,
+              :UnDelivered
+            ]
 
   belongs_to :restaurant
   belongs_to :user
@@ -13,7 +23,9 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items
 
   validates :bill_number, :length => { :minimum => 1, :maximum => 50 }, :allow_blank => true
-  validates :eta_after_confirm, numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 180 }, :allow_blank => true
+  validates :eta_after_confirm,
+            numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 180 },
+            :allow_blank => true
   validates :special_request, :length => { :minimum => 5, :maximum => 200 }, :allow_blank => true
   validates :remarks, :length => { :minimum => 5, :maximum => 200 }, :allow_blank => true
   validates :tax_amount, numericality: { greater_than_or_equal_to: 0 }, :allow_blank => true
@@ -26,8 +38,12 @@ class Order < ApplicationRecord
   validates :customer_locality, :length => { :minimum => 5, :maximum => 255 }, :allow_blank => true
   validates :customer_name, :length => { :minimum => 3, :maximum => 50 }, :presence => true
 
-  validates :customer_latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, :allow_blank => true
-  validates :customer_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, :allow_blank => true
+  validates :customer_latitude,
+            numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 },
+            :allow_blank => true
+  validates :customer_longitude,
+            numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 },
+            :allow_blank => true
 
   before_create :compute_order_amounts
 
@@ -83,7 +99,8 @@ class Order < ApplicationRecord
 
       # new status = Cancelled
     when Order.status.values[5]
-      if status_was == Order.status.values[5] || status_was == Order.status.values[4] || status_was == Order.status.values[3]
+      if status_was == Order.status.values[5] || status_was == Order.status.values[4] ||
+         status_was == Order.status.values[3]
         errors.add(:status, 'is not valid, can\'t cancel order now')
       else
         # No cancellation reason provided
@@ -106,7 +123,7 @@ class Order < ApplicationRecord
         elsif cancel_reason == Order.cancel_reason.values[0] && status_was != Order.status.values[0]
           errors.add(:cancel_reason, 'is not valid: Customer Cancellation')
 
-          # order is in route, so can't send cancel reason as out of stock, store closed or delivery person not available
+        # order is in route, so can't send cancel reason as out of stock, store closed or delivery person not available
         elsif status_was == Order.status.values[2] &&
               (cancel_reason == Order.cancel_reason.values[1] ||
                   cancel_reason == Order.cancel_reason.values[2] ||

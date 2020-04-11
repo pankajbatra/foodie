@@ -25,10 +25,14 @@ Fabricator(:order) do
       # get random meals in this newly created restaurant
       meals = order.restaurant.meals.order('RAND()').limit(rand(1...2))
       meals.each do |meal|
-        Fabricate(:order_item, meal: meal, order: order,
-                               quantity: Faker::Number.within(range: 1..4),
-                               meal_name: meal.name,
-                               price_per_item: meal.price)
+        Fabricate(
+          :order_item,
+          meal: meal,
+          order: order,
+          quantity: Faker::Number.within(range: 1..4),
+          meal_name: meal.name,
+          price_per_item: meal.price
+        )
       end
     end
   }

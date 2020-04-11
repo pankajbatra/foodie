@@ -143,10 +143,18 @@ RSpec.describe 'Meals APIs', type: :request do
       random_number = rand(5)
       meal = restaurant.meals[0]
       new_price = meal.price + random_number
-      put "#{url}/#{meal.id}", params: { status: Meal.status.values[1], is_chef_special: true,
-                                         name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                         price: (new_price), serves: 2, cuisine_id: 2 },
-                               headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{meal.id}",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            price: (new_price),
+            serves: 2,
+            cuisine_id: 2
+          },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       meal.reload
       expect(meal.name).to eq 'new name'
@@ -162,46 +170,81 @@ RSpec.describe 'Meals APIs', type: :request do
       restaurant = Fabricate(:restaurant, owner: restaurant_user)
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      put "#{url}/#{restaurant.meals[0].id}", params: { status: Meal.status.values[1], is_chef_special: true,
-                                                        name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                                        serves: 2, cuisine_id: 2 },
-                                              headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{restaurant.meals[0].id}",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            serves: 2,
+            cuisine_id: 2
+          },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
     end
     it 'request with restaurant login but invalid meal id' do
       restaurant = Fabricate(:restaurant, owner: restaurant_user)
       jwt = confirm_and_login_user(restaurant_user)
-      put "#{url}/#{restaurant.meals[0].id}1", params: { status: Meal.status.values[1], is_chef_special: true,
-                                                         name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                                         serves: 2, cuisine_id: 2 },
-                                               headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{restaurant.meals[0].id}1",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            serves: 2,
+            cuisine_id: 2
+          },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request with restaurant login but not owned restaurant' do
       restaurant = Fabricate(:restaurant, owner: restaurant_user)
       jwt = confirm_and_login_user(restaurant_user)
       temp_restaurant = Fabricate(:restaurant, name: "#{restaurant.name}1")
-      put "#{url}/#{temp_restaurant.meals[0].id}1", params: { status: Meal.status.values[1], is_chef_special: true,
-                                                              name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                                              serves: 2, cuisine_id: 2 },
-                                                    headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{temp_restaurant.meals[0].id}1",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            serves: 2,
+            cuisine_id: 2
+          },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request without JWT token' do
       restaurant = Fabricate(:restaurant, owner: restaurant_user)
-      put "#{url}/#{restaurant.meals[0].id}1", params: { status: Meal.status.values[1], is_chef_special: true,
-                                                         name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                                         serves: 2, cuisine_id: 2 }
+      put "#{url}/#{restaurant.meals[0].id}1",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            serves: 2,
+            cuisine_id: 2
+          }
       expect(response).to have_http_status(401)
       expect(response.body).to eq 'You need to sign in or sign up before continuing.'
     end
     it 'request with customer role' do
       restaurant = Fabricate(:restaurant, owner: restaurant_user)
       jwt = confirm_and_login_user(customer)
-      put "#{url}/#{restaurant.meals[0].id}1", params: { status: Meal.status.values[1], is_chef_special: true,
-                                                         name: 'new name', course: Meal.course.values[5], spice_level: Meal.spice_level.values[0],
-                                                         serves: 2, cuisine_id: 2 },
-                                               headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{restaurant.meals[0].id}1",
+          params: {
+            status: Meal.status.values[1],
+            is_chef_special: true,
+            name: 'new name',
+            course: Meal.course.values[5],
+            spice_level: Meal.spice_level.values[0],
+            serves: 2,
+            cuisine_id: 2
+          },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
@@ -219,7 +262,9 @@ RSpec.describe 'Meals APIs', type: :request do
       delete '/logout'
       expect(response).to have_http_status(200)
       jwt = confirm_and_login_user(restaurant_user)
-      put "#{url}/#{restaurant.meals[0].id}", params: { status: Meal.status.values[1] }, headers: { :Authorization => "Bearer #{jwt}" }
+      put "#{url}/#{restaurant.meals[0].id}",
+          params: { status: Meal.status.values[1] },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       delete '/logout'
       expect(response).to have_http_status(200)
@@ -237,7 +282,9 @@ RSpec.describe 'Meals APIs', type: :request do
       post url, params: params, headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(201)
 
-      patch "#{url}/#{restaurant.meals[0].id}", params: { status: Meal.status.values[2] }, headers: { :Authorization => "Bearer #{jwt}" }
+      patch "#{url}/#{restaurant.meals[0].id}",
+            params: { status: Meal.status.values[2] },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       restaurant.meals.reload
       expect(restaurant.meals[0].status).to eq Meal.status.values[2]
@@ -248,7 +295,9 @@ RSpec.describe 'Meals APIs', type: :request do
       post url, params: params, headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(201)
 
-      patch "#{url}/#{restaurant.meals[0].id}", params: { status: Meal.status.values[0] }, headers: { :Authorization => "Bearer #{jwt}" }
+      patch "#{url}/#{restaurant.meals[0].id}",
+            params: { status: Meal.status.values[0] },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       restaurant.meals.reload
       expect(restaurant.meals[0].status).to eq Meal.status.values[0]
@@ -259,7 +308,9 @@ RSpec.describe 'Meals APIs', type: :request do
       post url, params: params, headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(201)
 
-      patch "#{url}/#{restaurant.meals[0].id}", params: { status: Meal.status.values[1] }, headers: { :Authorization => "Bearer #{jwt}" }
+      patch "#{url}/#{restaurant.meals[0].id}",
+            params: { status: Meal.status.values[1] },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       restaurant.meals.reload
       expect(restaurant.meals[0].status).to eq Meal.status.values[1]

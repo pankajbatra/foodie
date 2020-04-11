@@ -5,14 +5,19 @@ module Request
     end
 
     def confirm_and_login_user(user)
-      post '/login', params: {
-        user: {
-          email: user.email,
-          password: user.password
-        }
-      }
+      post '/login',
+           params: {
+             user: {
+               email: user.email,
+               password: user.password
+             }
+           }
       token_from_request = response.headers['Authorization'].split(' ').last
-      JWT.decode(token_from_request, Rails.application.credentials.devise_jwt_secret_key, true)
+      JWT.decode(
+        token_from_request,
+        Rails.application.credentials.devise_jwt_secret_key,
+        true
+      )
     end
 
     def generate_order_params(restaurant, customer)
@@ -38,12 +43,14 @@ module Request
         params[:order_items_attributes][i][:quantity] = qty
         params[:order_items_attributes][i][:meal_name] = meal.name
         params[:order_items_attributes][i][:price_per_item] = meal.price
-        params[:order_items_attributes][i][:sub_order_amount] = (meal.price * qty)
+        params[:order_items_attributes][i][:sub_order_amount] = (meal.price *
+            qty)
         total_order_amount += (meal.price * qty)
         i = i + 1
       end
       total_tax = (total_order_amount * restaurant.tax_percent) / 100
-      total_order_amount += total_tax + restaurant.delivery_charge + restaurant.packing_charge
+      total_order_amount += total_tax + restaurant.delivery_charge +
+                            restaurant.packing_charge
       params[:tax_amount] = total_tax
       params[:delivery_charge] = restaurant.delivery_charge
       params[:packing_charge] = restaurant.packing_charge

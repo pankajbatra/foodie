@@ -1,14 +1,19 @@
 class User < ApplicationRecord
   extend Enumerize
   rolify
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
+  devise :database_authenticatable,
+         :registerable,
+         :recoverable,
+         :rememberable,
+         :validatable,
+         :jwt_authenticatable,
+         jwt_revocation_strategy: JwtBlacklist
   validates :name, :presence => true, :length => { :minimum => 3, :maximum => 30 }
   validates_format_of :name, :with => /\A[^0-9`!@#\$%\^&*+_=]+\z/
-  validates :mobile, :presence => true,
-                     :numericality => true,
-                     :length => { :minimum => 10, :maximum => 15 }
+  validates :mobile,
+            :presence => true,
+            :numericality => true,
+            :length => { :minimum => 10, :maximum => 15 }
   after_create :assign_default_role
   enumerize :status, in: [:Active, :Disabled], default: :Active
 

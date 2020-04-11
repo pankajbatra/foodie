@@ -1,0 +1,4 @@
+AllCops:
+  EnabledByDefault: true
+Layout/LineLength:
+  Max: 120

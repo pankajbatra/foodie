@@ -170,8 +170,9 @@ RSpec.describe 'Restaurant APIs', type: :request do
     it 'request with valid restaurant login' do
       jwt = confirm_and_login_user(restaurant_user)
       random_number = rand(5)
-      put update_url, params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge + random_number) },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      put update_url,
+          params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge + random_number) },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       expect(restaurant_user.restaurant.name).to eq restaurant.name
       expect(restaurant_user.restaurant.packing_charge).to eq (restaurant.packing_charge + random_number)
@@ -179,21 +180,24 @@ RSpec.describe 'Restaurant APIs', type: :request do
     it 'request with restaurant login but disabled restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      put update_url, params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      put update_url,
+          params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request with restaurant login but invalid restaurant id' do
       jwt = confirm_and_login_user(restaurant_user)
-      put update_url, params: { rid: '2323', packing_charge: (restaurant.packing_charge * 2) },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      put update_url,
+          params: { rid: '2323', packing_charge: (restaurant.packing_charge * 2) },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request with restaurant login but not owned restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       temp_restaurant = Fabricate(:restaurant, name: "#{restaurant.name}1")
-      put update_url, params: { rid: temp_restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      put update_url,
+          params: { rid: temp_restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
     end
     it 'request without JWT token' do
@@ -203,8 +207,9 @@ RSpec.describe 'Restaurant APIs', type: :request do
     end
     it 'request with customer role' do
       jwt = confirm_and_login_user(customer)
-      put update_url, params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      put update_url,
+          params: { rid: restaurant.rid, packing_charge: (restaurant.packing_charge * 2) },
+          headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
@@ -214,8 +219,9 @@ RSpec.describe 'Restaurant APIs', type: :request do
     let!(:restaurant) { Fabricate(:restaurant, owner: restaurant_user) }
     it 'request with valid restaurant login - closing' do
       jwt = confirm_and_login_user(restaurant_user)
-      patch open_url, params: { rid: restaurant.rid, open_for_delivery_now: false },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: restaurant.rid, open_for_delivery_now: false },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       expect(restaurant_user.restaurant.name).to eq restaurant.name
       expect(restaurant_user.restaurant.open_for_delivery_now).to eq false
@@ -223,8 +229,9 @@ RSpec.describe 'Restaurant APIs', type: :request do
     it 'request with valid restaurant login - opening' do
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(open_for_delivery_now: false)
-      patch open_url, params: { rid: restaurant.rid, open_for_delivery_now: true },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: restaurant.rid, open_for_delivery_now: true },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       expect(restaurant_user.restaurant.name).to eq restaurant.name
       expect(restaurant_user.restaurant.open_for_delivery_now).to eq true
@@ -232,21 +239,24 @@ RSpec.describe 'Restaurant APIs', type: :request do
     it 'request with restaurant login but disabled restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      patch open_url, params: { rid: restaurant.rid, open_for_delivery_now: false },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: restaurant.rid, open_for_delivery_now: false },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request with restaurant login but invalid restaurant id' do
       jwt = confirm_and_login_user(restaurant_user)
-      patch open_url, params: { rid: '2323', open_for_delivery_now: false },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: '2323', open_for_delivery_now: false },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(404)
     end
     it 'request with restaurant login but not owned restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       temp_restaurant = Fabricate(:restaurant, name: "#{restaurant.name}1")
-      patch open_url, params: { rid: temp_restaurant.rid, open_for_delivery_now: false },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: temp_restaurant.rid, open_for_delivery_now: false },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
     end
     it 'request without JWT token' do
@@ -256,8 +266,9 @@ RSpec.describe 'Restaurant APIs', type: :request do
     end
     it 'request with customer role' do
       jwt = confirm_and_login_user(customer)
-      patch open_url, params: { rid: restaurant.rid, open_for_delivery_now: false },
-                      headers: { :Authorization => "Bearer #{jwt}" }
+      patch open_url,
+            params: { rid: restaurant.rid, open_for_delivery_now: false },
+            headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end

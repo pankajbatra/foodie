@@ -3,7 +3,8 @@ module V1
     before_action :authenticate_user!
 
     def index
-      json_response(Cuisine.where(status: Cuisine.status.values[0]).order(name: :asc))
+      json_response(Cuisine.where(status: Cuisine.status.values[0])
+          .order(name: :asc))
     end
   end
 end

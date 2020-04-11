@@ -1,6 +1,19 @@
 class RestaurantSerializer < ActiveModel::Serializer
-  attributes :rid, :name, :description, :open_for_delivery_now, :min_delivery_amount, :avg_delivery_time,
-             :delivery_charge, :packing_charge, :tax_percent, :rating, :phone_number, :locality, :address, :latitude, :longitude
+  attributes :rid,
+             :name,
+             :description,
+             :open_for_delivery_now,
+             :min_delivery_amount,
+             :avg_delivery_time,
+             :delivery_charge,
+             :packing_charge,
+             :tax_percent,
+             :rating,
+             :phone_number,
+             :locality,
+             :address,
+             :latitude,
+             :longitude
   has_many :cuisines
   has_many :meals do
     object.meals.where.not(status: Meal.status.values[1])

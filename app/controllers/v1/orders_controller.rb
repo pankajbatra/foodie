@@ -12,13 +12,17 @@ module V1
         if current_user.restaurant == nil || current_user.restaurant.status != Restaurant.status.values[0]
           json_response({ message: 'Record not found' }, :not_found)
         else
-          orders = current_user.restaurant.orders.order(created_at: :desc).paginate(page: params[:page],
-                                                                                    per_page: 20)
+          orders = current_user.restaurant.orders.order(created_at: :desc).paginate(
+            page: params[:page],
+            per_page: 20
+          )
           json_response(orders)
         end
       else
-        orders = current_user.orders.order(created_at: :desc).paginate(page: params[:page],
-                                                                       per_page: 20)
+        orders = current_user.orders.order(created_at: :desc).paginate(
+          page: params[:page],
+          per_page: 20
+        )
         json_response(orders)
       end
     end
@@ -55,8 +59,11 @@ module V1
             if params[:total_bill_amount].to_i < restaurant.min_delivery_amount
               json_response({ message: 'Minimum order amount not provided' }, 403)
             else
-              order = Order.create!(create_params.except(:rid).merge(:user_id => current_user.id,
-                                                                     :restaurant_id => restaurant.id, :placed_at => Time.now))
+              order = Order.create!(create_params.except(:rid).merge(
+                                      :user_id => current_user.id,
+                                      :restaurant_id => restaurant.id,
+                                      :placed_at => Time.now
+                                    ))
               json_response(order, :created)
             end
           end
@@ -101,7 +108,8 @@ module V1
                 elsif @order.status != Order.status.values[0] && params[:cancel_reason] == Order.cancel_reason.values[2]
                   json_response({ message: 'Invalid cancellation reason: StoreClosed' }, 403)
 
-                  # order is in route, so can't send cancel reason as out of stock, store closed or delivery person not available
+                  # order is in Route, so can't send cancel reason as out of stock, store closed or delivery person not
+                  #  available
                 elsif @order.status == Order.status.values[2] &&
                       (params[:cancel_reason] == Order.cancel_reason.values[1] ||
                           params[:cancel_reason] == Order.cancel_reason.values[2] ||
@@ -109,8 +117,12 @@ module V1
                   json_response({ message: 'Invalid cancellation reason at this stage' }, 403)
 
                 else
-                  @order.update!({ cancel_reason: params[:cancel_reason], remarks: params[:remarks],
-                                   :cancelled_at => Time.now, :status => params[:status] })
+                  @order.update!({
+                                   cancel_reason: params[:cancel_reason],
+                                   remarks: params[:remarks],
+                                   :cancelled_at => Time.now,
+                                   :status => params[:status]
+                                 })
                   head :no_content
                 end
               end
@@ -121,10 +133,15 @@ module V1
               if @order.status != Order.status.values[0]
                 json_response({ message: 'You don\'t have permission for this operation : Processing' }, 403)
               else
-                @order.update!({ bill_number: params[:bill_number],
-                                 remarks: params[:remarks], eta_after_confirm: params[:eta_after_confirm],
-                                 payment_status: (params[:payment_status] != nil ? params[:payment_status] : @order.payment_status),
-                                 :confirmed_at => Time.now, :status => params[:status] })
+                @order.update!({
+                                 bill_number: params[:bill_number],
+                                 remarks: params[:remarks],
+                                 eta_after_confirm: params[:eta_after_confirm],
+                                 payment_status: (params[:payment_status] != nil ? params[:payment_status] :
+                                  @order.payment_status),
+                                 :confirmed_at => Time.now,
+                                 :status => params[:status]
+                               })
                 head :no_content
               end
 
@@ -134,10 +151,14 @@ module V1
               if @order.status != Order.status.values[1]
                 json_response({ message: 'You don\'t have permission for this operation: InRoute' }, 403)
               else
-                @order.update!({ bill_number: params[:bill_number],
+                @order.update!({
+                                 bill_number: params[:bill_number],
                                  remarks: params[:remarks],
-                                 payment_status: (params[:payment_status] != nil ? params[:payment_status] : @order.payment_status),
-                                 :dispatched_at => Time.now, :status => params[:status] })
+                                 payment_status: (params[:payment_status] != nil ?
+                                                      params[:payment_status] : @order.payment_status),
+                                 :dispatched_at => Time.now,
+                                 :status => params[:status]
+                               })
                 head :no_content
               end
 
@@ -147,9 +168,13 @@ module V1
               if @order.status != Order.status.values[2]
                 json_response({ message: 'You don\'t have permission for this operation: Delivered' }, 403)
               else
-                @order.update!({ remarks: params[:remarks],
-                                 payment_status: (params[:payment_status] != nil ? params[:payment_status] : @order.payment_status),
-                                 :delivered_at => Time.now, :status => params[:status] })
+                @order.update!({
+                                 remarks: params[:remarks],
+                                 payment_status: (params[:payment_status] != nil ?
+                                                      params[:payment_status] : @order.payment_status),
+                                 :delivered_at => Time.now,
+                                 :status => params[:status]
+                               })
                 head :no_content
               end
             else
@@ -166,8 +191,11 @@ module V1
               if @order.status != Order.status.values[0]
                 json_response({ message: 'You don\'t have permission for this operation' }, 403)
               else
-                @order.update!({ cancel_reason: Order.cancel_reason.values[0],
-                                 :cancelled_at => Time.now, :status => params[:status] })
+                @order.update!({
+                                 cancel_reason: Order.cancel_reason.values[0],
+                                 :cancelled_at => Time.now,
+                                 :status => params[:status]
+                               })
                 head :no_content
               end
               # Received
@@ -196,10 +224,22 @@ module V1
     end
 
     def create_params
-      params.permit(:rid, :tax_amount, :delivery_charge, :packing_charge, :total_bill_amount, :payment_mode,
-                    :special_request, :customer_mobile, :customer_address, :customer_locality, :customer_latitude,
-                    :customer_longitude, :customer_name,
-                    order_items_attributes: [:meal_id, :quantity, :meal_name, :price_per_item, :sub_order_amount])
+      params.permit(
+        :rid,
+        :tax_amount,
+        :delivery_charge,
+        :packing_charge,
+        :total_bill_amount,
+        :payment_mode,
+        :special_request,
+        :customer_mobile,
+        :customer_address,
+        :customer_locality,
+        :customer_latitude,
+        :customer_longitude,
+        :customer_name,
+        order_items_attributes: [:meal_id, :quantity, :meal_name, :price_per_item, :sub_order_amount]
+      )
     end
 
     def update_params

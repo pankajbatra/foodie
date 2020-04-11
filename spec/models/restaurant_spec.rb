@@ -1,7 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Restaurant, type: :model do
-  subject { Fabricate(:restaurant, name: 'Spice Junction', locality: 'Broadway') }
+  subject {
+    Fabricate(
+      :restaurant,
+      name: 'Spice Junction',
+      locality: 'Broadway'
+    )
+  }
 
   before { subject.save }
 
@@ -276,7 +282,13 @@ RSpec.describe Restaurant, type: :model do
   end
 
   context '.' do
-    before { Fabricate(:restaurant, name: 'Spice Box', locality: 'Broadway Street') }
+    before {
+      Fabricate(
+        :restaurant,
+        name: 'Spice Box',
+        locality: 'Broadway Street'
+      )
+    }
     it 'restaurant name should be unique for locality' do
       subject.name = 'SPICE Box'
       subject.locality = 'BroadWay Street'
