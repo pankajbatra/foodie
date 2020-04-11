@@ -155,7 +155,7 @@ RSpec.describe 'Order APIs', type: :request do
       post url, params: params, headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(201)
       expect(json['oid'].length).to be > 4
-      expect(json['placed_at'].to_date).to eql Time.now.to_date
+      expect(json['placed_at'].to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(json['confirmed_at']).to eql nil
       expect(json['dispatched_at']).to eql nil
       expect(json['delivered_at']).to eql nil
@@ -228,7 +228,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(response).to have_http_status(200)
       expect(json.size).to eql(1)
       expect(json[0]['oid'].length).to be > 4
-      expect(json[0]['placed_at'].to_date).to eql Time.now.to_date
+      expect(json[0]['placed_at'].to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(json[0]['confirmed_at']).to eql nil
       expect(json[0]['dispatched_at']).to eql nil
       expect(json[0]['delivered_at']).to eql nil
@@ -272,7 +272,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(response).to have_http_status(200)
       expect(json.size).to eql(1)
       expect(json[0]['oid'].length).to be > 4
-      expect(json[0]['placed_at'].to_date).to eql Time.now.to_date
+      expect(json[0]['placed_at'].to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(json[0]['confirmed_at']).to eql nil
       expect(json[0]['dispatched_at']).to eql nil
       expect(json[0]['delivered_at']).to eql nil
@@ -549,7 +549,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.received_at.to_date).to eql Time.now.to_date
+      expect(order.received_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[4]
     end
 
@@ -580,7 +580,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.cancelled_at.to_date).to eql Time.now.to_date
+      expect(order.cancelled_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[5]
       expect(order.cancel_reason).to eql Order.cancel_reason.values[0]
     end
@@ -741,7 +741,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.cancelled_at.to_date).to eql Time.now.to_date
+      expect(order.cancelled_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[5]
       expect(order.cancel_reason).to eql Order.cancel_reason.values[2]
       expect(order.remarks).to eql 'store closed'
@@ -764,7 +764,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.confirmed_at.to_date).to eql Time.now.to_date
+      expect(order.confirmed_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[1]
     end
 
@@ -786,7 +786,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.dispatched_at.to_date).to eql Time.now.to_date
+      expect(order.dispatched_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[2]
     end
 
@@ -807,7 +807,7 @@ RSpec.describe 'Order APIs', type: :request do
             headers: { :Authorization => "Bearer #{jwt}" }
       expect(response).to have_http_status(204)
       order.reload
-      expect(order.delivered_at.to_date).to eql Time.now.to_date
+      expect(order.delivered_at.to_datetime.utc.to_date.to_s).to eql Time.now.utc.to_date.to_s
       expect(order.status).to eql Order.status.values[3]
     end
   end

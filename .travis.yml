@@ -6,9 +6,9 @@ env:
 services:
    - mysql
 script:
- - RAILS_ENV=test bundle exec rake db:migrate --trace
- - bundle exec rake db:test:prepare
- - bundle exec rspec spec/
+ - RUBYOPT='-W:no-deprecated -W:no-experimental' RAILS_ENV=test bundle exec rake db:migrate --trace
+ - RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rake db:test:prepare
+ - RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec spec/
 before_script:
  - mysql -e 'create database foodie_test'
 bundler_args: --binstubs=./bundler_stubs
