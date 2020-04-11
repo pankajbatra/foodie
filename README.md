@@ -44,12 +44,17 @@ An application for Food Delivery
 
 * Search for fake data: faker search food
 
-* Using reek, rubocop, rails_best_practices, simplecov
+* append RUBYOPT='-W:no-deprecated -W:no-experimental' before rails commandline to avoid warnings
 
 -- To Do ----
-- auto refresh orders and status using pubnub
-- photos of meals
-- logos of restaurant
+- Fix code smells - rubycritic, flay, reek, simplecov, rubocop, rails_best_practices and  errors
+- deployment on heroku
+- auto refresh orders and status using rails cable
+- photos of meals using rails storage
+- logos of restaurant using rails storage
+- moving permission checks to cancan
+- Use name instead of index in status values
+- Move same validation to helper class instead of rewriting to multiple places
 - Group meals by cuisine in user display
 - Show Vegan, Chef Special (show Thumbs up icon), halal, contains egg (show egg icon) on meal. change veg and non-veg text to color icons. Show description and ingredients. spice level as icon (chilli)
 - Show rating on restaurant card and inside
@@ -61,4 +66,10 @@ An application for Food Delivery
 - rack-attack
 - Sentry integration
 - swagger
-- implement caching using identity_cache, redis
+- implement caching using rails cache & redis
+- Use active jobs
+- Use i18 APIs
+- Use rails mailbox
+
+
+gem install specific_install brakeman flay flog reek rubocop roodi pronto pronto-brakeman pronto-reek 

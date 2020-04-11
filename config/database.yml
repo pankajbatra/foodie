@@ -14,7 +14,7 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password:
+  password: <%= Rails.application.credentials.dev_db_password %>
   host: localhost
 
 development:
@@ -49,7 +49,7 @@ test:
 #
 production:
   <<: *default
-  database: foodie
+  database: <%= Rails.application.credentials.db_name %>
   host: <%= Rails.application.credentials.db_host %>
   username: <%= Rails.application.credentials.db_user %>
   password: <%= Rails.application.credentials.db_password %>
