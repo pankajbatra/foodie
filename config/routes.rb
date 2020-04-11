@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/mgmt', as: 'rails_admin'
   devise_for :users,
-             defaults: { format: :json },
+             defaults: {format: :json},
              path: '',
              path_names: {
                  sign_in: 'login',

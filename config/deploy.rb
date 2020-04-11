@@ -64,7 +64,7 @@ set :templates_path, 'config/deploy/templates'
 # set :delayed_job_service, -> { "delayed_job_#{fetch(:application)}_#{fetch(:stage)}" }
 
 set :puma_preload_app, false
-set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock" #accept array for multi-bind
 set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
 set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
@@ -102,7 +102,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       within release_path do
         # with rails_env: fetch(:rails_env) do
-          execute :rake, "db:seed"
+        execute :rake, "db:seed"
         # end
       end
     end
