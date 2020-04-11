@@ -48,6 +48,8 @@ An application for Food Delivery
 
 * Search for fake data: faker search food
 
+* Using reeks, rubocop
+
 -- To Do ----
 - auto refresh orders and status using pubnub
 - photos of meals

@@ -43,8 +43,7 @@ module Request
         params[:order_items_attributes][i][:quantity] = qty
         params[:order_items_attributes][i][:meal_name] = meal.name
         params[:order_items_attributes][i][:price_per_item] = meal.price
-        params[:order_items_attributes][i][:sub_order_amount] = (meal.price *
-            qty)
+        params[:order_items_attributes][i][:sub_order_amount] = (meal.price * qty)
         total_order_amount += (meal.price * qty)
         i = i + 1
       end

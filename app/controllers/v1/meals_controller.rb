@@ -23,10 +23,10 @@ module V1
     end
 
     def create
-      if current_user.is_restaurant_owner? && current_user.restaurant != nil &&
-         current_user.restaurant.status == Restaurant.status.values[0]
-        meal = Meal.create!(meal_params.merge(:restaurant_id =>
-                                                  current_user.restaurant.id))
+      restaurant = current_user.restaurant
+      if current_user.is_restaurant_owner? && restaurant != nil &&
+          restaurant.status == Restaurant.status.values[0]
+        meal = Meal.create!(meal_params.merge(:restaurant_id => restaurant.id))
         json_response(meal, :created)
       else
         json_response(
