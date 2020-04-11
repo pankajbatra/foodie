@@ -20,6 +20,6 @@ class CreateMeals < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :meals, [ :restaurant_id, :name ], unique: true
+    add_index :meals, [:restaurant_id, :name], unique: true
   end
 end

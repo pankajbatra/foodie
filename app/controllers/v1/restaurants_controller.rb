@@ -6,7 +6,7 @@ module V1
     def index
       if current_user.is_restaurant_owner?
         if current_user.restaurant == nil || current_user.restaurant.status != Restaurant.status.values[0]
-          json_response({ message: 'Record not found' }, :not_found)
+          json_response({message: 'Record not found'}, :not_found)
         else
           json_response(current_user.restaurant)
         end
@@ -25,23 +25,23 @@ module V1
         restaurant = Restaurant.create!(restaurant_params.merge(:owner_id => current_user.id))
         json_response(restaurant, :created)
       else
-        json_response({ message: 'You don\'t have permission for this operation'}, 403)
+        json_response({message: 'You don\'t have permission for this operation'}, 403)
       end
     end
 
     # GET /restaurants/:rid
     def show
       if @restaurant ==nil || @restaurant.status != Restaurant.status.values[0]
-        json_response({ message: 'Record not found' }, :not_found)
+        json_response({message: 'Record not found'}, :not_found)
       else
         if current_user.is_restaurant_owner?
           if current_user.restaurant!=nil && current_user.restaurant.rid == @restaurant.rid
             json_response(@restaurant)
           else
-            json_response({ message: 'You don\'t have permission for this operation'}, 403)
+            json_response({message: 'You don\'t have permission for this operation'}, 403)
           end
         else
-            json_response(@restaurant)
+          json_response(@restaurant)
         end
       end
     end
@@ -53,7 +53,7 @@ module V1
         RestaurantBlacklisting.create!({restaurant_id: current_user.restaurant.id, user_id: blacklisted_user.id})
         head :no_content
       else
-        json_response({ message: 'You don\'t have permission for this operation'}, 403)
+        json_response({message: 'You don\'t have permission for this operation'}, 403)
       end
     end
 
@@ -61,7 +61,7 @@ module V1
     # PATCH /restaurants/:rid
     def update
       if @restaurant ==nil || @restaurant.status != Restaurant.status.values[0]
-        json_response({ message: 'Record not found' }, :not_found)
+        json_response({message: 'Record not found'}, :not_found)
       else
         if current_user.is_restaurant_owner?
           if current_user.restaurant!=nil && current_user.restaurant.rid == @restaurant.rid
@@ -73,10 +73,10 @@ module V1
               head :no_content
             end
           else
-            json_response({ message: 'You don\'t have permission for this operation'}, 403)
+            json_response({message: 'You don\'t have permission for this operation'}, 403)
           end
         else
-          json_response({ message: 'You don\'t have permission for this operation'}, 403)
+          json_response({message: 'You don\'t have permission for this operation'}, 403)
         end
       end
     end
@@ -84,8 +84,8 @@ module V1
     private
     def restaurant_params
       params.permit(:rid, :name, :description, :min_delivery_amount, :avg_delivery_time, :delivery_charge,
-      :packing_charge, :tax_percent, :phone_number, :locality, :address, :latitude, :longitude, :open_for_delivery_now, :page,
-      cuisine_ids: [])
+                    :packing_charge, :tax_percent, :phone_number, :locality, :address, :latitude, :longitude, :open_for_delivery_now, :page,
+                    cuisine_ids: [])
     end
 
     def set_restaurant

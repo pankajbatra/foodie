@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Customer Login', type: :request do
-  let(:user) { Fabricate(:user) }
-  let(:url) { '/login' }
+  let(:user) {Fabricate(:user)}
+  let(:url) {'/login'}
   let(:params) do
     {
         user: {
@@ -56,7 +56,7 @@ RSpec.describe 'Customer Login', type: :request do
   end
 
   context 'when login params are incorrect' do
-    before { post url }
+    before {post url}
     before do
       post url, params: wrong_params
     end
@@ -68,23 +68,23 @@ RSpec.describe 'Customer Login', type: :request do
 end
 
 RSpec.describe 'Customer logout', type: :request do
-  let!(:user) { Fabricate(:user) }
-  let(:url) { '/logout' }
+  let!(:user) {Fabricate(:user)}
+  let(:url) {'/logout'}
 
   it 'returns 200, no content' do
     jwt = confirm_and_login_user(user)
     expect(json['email']).to eq user.email
     delete url
     expect(response).to have_http_status(200)
-    get '/cuisines', headers: {:Authorization => "Bearer #{jwt}" }
+    get '/cuisines', headers: {:Authorization => "Bearer #{jwt}"}
     expect(response).to have_http_status(401)
     expect(response.body).to eq 'Not enough or too many segments'
   end
 end
 
 RSpec.describe 'Restaurant Login', type: :request do
-  let(:user) { Fabricate(:restaurant_owner) }
-  let(:url) { '/login' }
+  let(:user) {Fabricate(:restaurant_owner)}
+  let(:url) {'/login'}
   let(:params) do
     {
         user: {
@@ -132,7 +132,7 @@ RSpec.describe 'Restaurant Login', type: :request do
   end
 
   context 'when login params are incorrect' do
-    before { post url }
+    before {post url}
     before do
       post url, params: wrong_params
     end
@@ -144,15 +144,15 @@ RSpec.describe 'Restaurant Login', type: :request do
 end
 
 RSpec.describe 'Restaurant logout', type: :request do
-  let!(:user) { Fabricate(:restaurant_owner) }
-  let(:url) { '/logout' }
+  let!(:user) {Fabricate(:restaurant_owner)}
+  let(:url) {'/logout'}
 
   it 'returns 200, no content' do
     jwt = confirm_and_login_user(user)
     expect(json['email']).to eq user.email
     delete url
     expect(response).to have_http_status(200)
-    get '/cuisines', headers: {:Authorization => "Bearer #{jwt}" }
+    get '/cuisines', headers: {:Authorization => "Bearer #{jwt}"}
     expect(response).to have_http_status(401)
     expect(response.body).to eq 'Not enough or too many segments'
   end

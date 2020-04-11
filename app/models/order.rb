@@ -21,7 +21,7 @@ class Order < ApplicationRecord
   validates :packing_charge, numericality: {greater_than_or_equal_to: 0}, :allow_blank => false
   validates :total_bill_amount, numericality: {greater_than_or_equal_to: 0.1}, :allow_blank => true
 
-  validates :customer_mobile,:presence => true, :numericality => true, :length => { :minimum => 10, :maximum => 15 }
+  validates :customer_mobile, :presence => true, :numericality => true, :length => {:minimum => 10, :maximum => 15}
   validates :customer_address, :length => {:minimum => 10, :maximum => 500}, :presence => true
   validates :customer_locality, :length => {:minimum => 5, :maximum => 255}, :allow_blank => true
   validates :customer_name, :length => {:minimum => 3, :maximum => 50}, :presence => true
@@ -171,7 +171,7 @@ class Order < ApplicationRecord
       #validate tax amount
       total_tax = ((total_order_amount*restaurant.tax_percent)/100).round(2)
       unless tax_amount == total_tax
-          errors.add(:tax_amount, 'is invalid')
+        errors.add(:tax_amount, 'is invalid')
       end
       total_order_amount+=total_tax
 
@@ -191,13 +191,14 @@ class Order < ApplicationRecord
       unless total_order_amount == total_bill_amount
         errors.add(:total_bill_amount, 'is invalid')
       end
-    # else
+      # else
       #no items sent in order
       # errors.add(:order_items, 'not provided')
     end
   end
 
   before_create :create_unique_identifier
+
   def create_unique_identifier
     begin
       self.oid = SecureRandom.hex(7)

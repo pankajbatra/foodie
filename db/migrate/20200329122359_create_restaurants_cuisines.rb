@@ -4,6 +4,6 @@ class CreateRestaurantsCuisines < ActiveRecord::Migration[6.0]
       t.references :restaurant
       t.references :cuisine
     end
-    add_index :restaurants_cuisines, [ :restaurant_id, :cuisine_id ], unique: true
+    add_index :restaurants_cuisines, [:restaurant_id, :cuisine_id], unique: true
   end
 end

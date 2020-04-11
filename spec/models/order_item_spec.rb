@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe OrderItem, type: :model do
-  let!(:order) { Fabricate(:order, create_items: false)}
+  let!(:order) {Fabricate(:order, create_items: false)}
   subject {Fabricate(:order_item, meal: order.restaurant.meals[0], order: order, quantity: 2,
                      meal_name: order.restaurant.meals[0].name, price_per_item: order.restaurant.meals[0].price)}
 

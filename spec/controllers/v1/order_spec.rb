@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Order APIs', type: :request do
-  let!(:restaurant_user) { Fabricate(:restaurant_owner) }
-  let!(:customer) { Fabricate(:user) }
-  let!(:restaurant) { Fabricate(:restaurant, owner: restaurant_user) }
-  let(:url) { '/orders' }
-  let(:get_url) { '/orders/get' }
-  let(:update_url) { '/orders/update' }
-  let(:params) { generate_order_params(restaurant, customer) }
+  let!(:restaurant_user) {Fabricate(:restaurant_owner)}
+  let!(:customer) {Fabricate(:user)}
+  let!(:restaurant) {Fabricate(:restaurant, owner: restaurant_user)}
+  let(:url) {'/orders'}
+  let(:get_url) {'/orders/get'}
+  let(:update_url) {'/orders/update'}
+  let(:params) {generate_order_params(restaurant, customer)}
 
   describe 'POST /orders' do
     it 'not logged in' do
@@ -17,7 +17,7 @@ RSpec.describe 'Order APIs', type: :request do
     end
     it 'restaurant id not sent' do
       jwt = confirm_and_login_user(customer)
-      post url, params: params.except(:rid), headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params.except(:rid), headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
@@ -25,92 +25,94 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(customer)
       new_params = params.except(:rid)
       new_params.store(:rid, 'random_value')
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
     it 'restaurant user trying to create order' do
       jwt = confirm_and_login_user(restaurant_user)
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
     it 'disabled user trying to create order' do
       jwt = confirm_and_login_user(customer)
       customer.update_columns(status: User.status.values[1])
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(401)
       expect(response.body).to eq 'Sorry, this account has been deactivated.'
     end
     it 'user trying to create order on disabled restaurant' do
       jwt = confirm_and_login_user(customer)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
     it 'user trying to create order on closed for delivery restaurant' do
       jwt = confirm_and_login_user(customer)
       restaurant.update_columns(open_for_delivery_now: false)
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
     it 'blacklisted user trying to create order' do
       jwt = confirm_and_login_user(customer)
       RestaurantBlacklisting.create!({restaurant_id: restaurant.id, user_id: customer.id})
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'User is blacklisted'
     end
     it 'no meals provided in order data' do
       jwt = confirm_and_login_user(customer)
-      post url, params: params.except(:order_items_attributes), headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params.except(:order_items_attributes), headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'No meals provided'
-      end
+    end
     it 'min order amount not reached' do
       jwt = confirm_and_login_user(customer)
       new_params = params.except(:total_bill_amount)
       new_params.store(:total_bill_amount, (restaurant.min_delivery_amount - 1))
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'Minimum order amount not provided'
     end
     it 'out of stock meal added' do
       jwt = confirm_and_login_user(customer)
       Meal.find_by_id(params[:order_items_attributes][0][:meal_id]).update_columns(status: Meal.status.values[2])
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('out of stock')
     end
     it 'disabled meal added' do
       jwt = confirm_and_login_user(customer)
       Meal.find_by_id(params[:order_items_attributes][0][:meal_id]).update_columns(status: Meal.status.values[1])
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('out of stock')
     end
     it 'invalid meal name sent' do
       jwt = confirm_and_login_user(customer)
       Meal.find_by_id(params[:order_items_attributes][0][:meal_id]).update_columns(name: 'some_random_name')
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Order items is invalid')
     end
     it 'invalid meal price sent' do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
-      new_params[:order_items_attributes][0][:price_per_item] = (new_params[:order_items_attributes][0][:price_per_item] + 0.1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      new_params[:order_items_attributes][0][:price_per_item] =
+          (new_params[:order_items_attributes][0][:price_per_item] + 0.1)
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Order items is invalid')
     end
     it 'invalid sub order amount sent' do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
-      new_params[:order_items_attributes][0][:sub_order_amount] = (new_params[:order_items_attributes][0][:sub_order_amount] + 0.1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      new_params[:order_items_attributes][0][:sub_order_amount] =
+          (new_params[:order_items_attributes][0][:sub_order_amount] + 0.1)
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Order items is invalid')
     end
@@ -118,7 +120,7 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
       new_params[:tax_amount] = (new_params[:tax_amount] + 0.1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Tax amount is invalid')
     end
@@ -126,7 +128,7 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
       new_params[:delivery_charge] = (new_params[:delivery_charge] + 1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Delivery charge is invalid')
     end
@@ -134,7 +136,7 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
       new_params[:packing_charge] = (new_params[:packing_charge] + 1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Packing charge is invalid')
     end
@@ -142,13 +144,13 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(customer)
       new_params = generate_order_params(restaurant, customer)
       new_params[:total_bill_amount] = (new_params[:total_bill_amount] + 0.1)
-      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: new_params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(422)
       expect(json['message']).to include('Total bill amount is invalid')
     end
     it 'valid order data' do
       jwt = confirm_and_login_user(customer)
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(201)
       expect(json['oid'].length).to be > 4
       expect(json['placed_at'].to_date).to eql Time.now.to_date
@@ -194,33 +196,33 @@ RSpec.describe 'Order APIs', type: :request do
     it 'restaurant user but disabled restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(404)
     end
     it 'request with valid restaurant login but without a saved restaurant' do
       temp_user = Fabricate(:restaurant_owner)
       jwt = confirm_and_login_user(temp_user)
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(404)
     end
     it 'restaurant user without any order' do
       jwt = confirm_and_login_user(restaurant_user)
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(200)
       expect(json.size).to eql(0)
     end
     it 'customer without any order' do
       jwt = confirm_and_login_user(customer)
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(200)
       expect(json.size).to eql(0)
     end
     it 'customer after placing order' do
       jwt = confirm_and_login_user(customer)
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(201)
 
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(200)
       expect(json.size).to eql(1)
       expect(json[0]['oid'].length).to be > 4
@@ -259,12 +261,12 @@ RSpec.describe 'Order APIs', type: :request do
 
     it 'restaurant user after placing order' do
       jwt = confirm_and_login_user(customer)
-      post url, params: params, headers: {:Authorization => "Bearer #{jwt}" }
+      post url, params: params, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(201)
       delete '/logout'
 
       jwt = confirm_and_login_user(restaurant_user)
-      get url, headers: {:Authorization => "Bearer #{jwt}" }
+      get url, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(200)
       expect(json.size).to eql(1)
       expect(json[0]['oid'].length).to be > 4
@@ -306,7 +308,7 @@ RSpec.describe 'Order APIs', type: :request do
   end
 
   describe 'GET /orders/get' do
-    let!(:order) { Fabricate(:order, restaurant: restaurant, user: customer) }
+    let!(:order) {Fabricate(:order, restaurant: restaurant, user: customer)}
     it 'not logged in' do
       get get_url, params: {oid: order.oid}
       expect(response).to have_http_status(401)
@@ -331,7 +333,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(response).to have_http_status(403)
       expect(json['message']).to eq 'You don\'t have permission for this operation'
     end
-    it 'restaurant login but trying another restaurant\'s order'  do
+    it 'restaurant login but trying another restaurant\'s order' do
       jwt = confirm_and_login_user(Fabricate(:restaurant).owner)
       get get_url, params: {oid: order.oid}, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
@@ -378,7 +380,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(json['order_items'].size).to eq order.order_items.size
     end
 
-    it 'customer login but trying another user\'s order'  do
+    it 'customer login but trying another user\'s order' do
       jwt = confirm_and_login_user(Fabricate(:user))
       get get_url, params: {oid: order.oid}, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
@@ -428,7 +430,7 @@ RSpec.describe 'Order APIs', type: :request do
   end
 
   describe 'PATCH /orders/update' do
-    let!(:order) { Fabricate(:order, restaurant: restaurant, user: customer) }
+    let!(:order) {Fabricate(:order, restaurant: restaurant, user: customer)}
 
     it 'restaurant user but invalid oid' do
       jwt = confirm_and_login_user(restaurant_user)
@@ -476,7 +478,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
 
-    it 'customer login but trying another user\'s order'  do
+    it 'customer login but trying another user\'s order' do
       jwt = confirm_and_login_user(Fabricate(:user))
       patch update_url, params: {oid: order.oid, status: Order.status.values[5]},
             headers: {:Authorization => "Bearer #{jwt}"}
@@ -484,7 +486,7 @@ RSpec.describe 'Order APIs', type: :request do
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
 
-    it 'restaurant login but trying another restaurant\'s order'  do
+    it 'restaurant login but trying another restaurant\'s order' do
       jwt = confirm_and_login_user(Fabricate(:restaurant).owner)
       patch update_url, params: {oid: order.oid, status: Order.status.values[1]},
             headers: {:Authorization => "Bearer #{jwt}"}
@@ -570,7 +572,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'request with restaurant login but disabled restaurant' do
       jwt = confirm_and_login_user(restaurant_user)
       restaurant.update_columns(status: Restaurant.status.values[1])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[1]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[1]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
@@ -578,7 +581,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'request with valid restaurant login before restaurant create' do
       temp_user = Fabricate(:restaurant_owner)
       jwt = confirm_and_login_user(temp_user)
-      patch update_url, params: {oid: order.oid, status: Order.status.values[1]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[1]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
@@ -586,7 +590,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but delivered order' do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[3])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[5]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[5]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
@@ -594,7 +599,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but received order' do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[4])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[5]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[5]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
@@ -602,14 +608,16 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but already cancelled order' do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[5])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[5]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[5]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('You don\'t have permission for this operation')
     end
 
     it 'cancelling order with restaurant login but without reason' do
       jwt = confirm_and_login_user(restaurant_user)
-      patch update_url, params: {oid: order.oid, status: Order.status.values[5]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[5]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -617,7 +625,7 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but with customer cancel reason' do
       jwt = confirm_and_login_user(restaurant_user)
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-            cancel_reason: Order.cancel_reason.values[0]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[0]}, headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -625,7 +633,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but with damaged reason' do
       jwt = confirm_and_login_user(restaurant_user)
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[7]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[7]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -633,7 +642,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'cancelling order with restaurant login but with undelivered reason' do
       jwt = confirm_and_login_user(restaurant_user)
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[8]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[8]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -642,7 +652,8 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[1])
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[2]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[2]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -651,15 +662,18 @@ RSpec.describe 'Order APIs', type: :request do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[2])
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[1]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[1]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[2]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[2]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-                                 cancel_reason: Order.cancel_reason.values[3]}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[3]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(403)
       expect(json['message']).to include('Invalid cancellation reason')
     end
@@ -667,7 +681,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'restaurant user marking cancelled with previous status placed' do
       jwt = confirm_and_login_user(restaurant_user)
       patch update_url, params: {oid: order.oid, status: Order.status.values[5],
-            cancel_reason: Order.cancel_reason.values[2], remarks: 'store closed'}, headers: {:Authorization => "Bearer #{jwt}"}
+                                 cancel_reason: Order.cancel_reason.values[2], remarks: 'store closed'},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(204)
       order.reload
       expect(order.cancelled_at.to_date).to eql Time.now.to_date
@@ -687,7 +702,8 @@ RSpec.describe 'Order APIs', type: :request do
 
     it 'restaurant user marking processing with previous status placed' do
       jwt = confirm_and_login_user(restaurant_user)
-      patch update_url, params: {oid: order.oid, status: Order.status.values[1]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[1]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(204)
       order.reload
       expect(order.confirmed_at.to_date).to eql Time.now.to_date
@@ -706,7 +722,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'restaurant user marking in route with previous status processing' do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[1])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[2]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[2]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(204)
       order.reload
       expect(order.dispatched_at.to_date).to eql Time.now.to_date
@@ -724,7 +741,8 @@ RSpec.describe 'Order APIs', type: :request do
     it 'restaurant user marking delivered with previous status in route' do
       jwt = confirm_and_login_user(restaurant_user)
       order.update_columns(status: Order.status.values[2])
-      patch update_url, params: {oid: order.oid, status: Order.status.values[3]}, headers: {:Authorization => "Bearer #{jwt}"}
+      patch update_url, params: {oid: order.oid, status: Order.status.values[3]},
+            headers: {:Authorization => "Bearer #{jwt}"}
       expect(response).to have_http_status(204)
       order.reload
       expect(order.delivered_at.to_date).to eql Time.now.to_date

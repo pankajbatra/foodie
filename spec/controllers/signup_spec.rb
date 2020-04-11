@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Customer Signup', type: :request do
-  let(:url) { '/signup' }
+  let(:url) {'/signup'}
   let(:params) do
     {
         user: {
@@ -14,7 +14,7 @@ RSpec.describe 'Customer Signup', type: :request do
   end
 
   context 'when user is created' do
-    before { post url, params: params }
+    before {post url, params: params}
 
     it 'returns 201' do
       expect(response.status).to eq 201
@@ -49,7 +49,7 @@ RSpec.describe 'Customer Signup', type: :request do
 end
 
 RSpec.describe 'Restaurant Signup', type: :request do
-  let(:url) { '/signup' }
+  let(:url) {'/signup'}
   let(:params) do
     {
         user: {
@@ -63,7 +63,7 @@ RSpec.describe 'Restaurant Signup', type: :request do
   end
 
   context 'when user is created' do
-    before { post url, params: params }
+    before {post url, params: params}
 
     it 'returns 201' do
       expect(response.status).to eq 201

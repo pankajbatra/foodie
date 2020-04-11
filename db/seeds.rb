@@ -25,7 +25,7 @@ if Rails.env.production?
   10.times {
     customer = Fabricate(:user)
     restaurant = Fabricate(:restaurant)
-    2.times{
+    2.times {
       Fabricate(:order, restaurant: restaurant, user: customer)
     }
   }

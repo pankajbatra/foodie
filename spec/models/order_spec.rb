@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Order, type: :model do
-  subject { Fabricate(:order)}
+  subject {Fabricate(:order)}
 
   before {subject.save}
 

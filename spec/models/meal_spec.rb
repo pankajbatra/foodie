@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Meal, type: :model do
-  let!(:restaurant) { Fabricate(:restaurant, create_meals: false) }
+  let!(:restaurant) {Fabricate(:restaurant, create_meals: false)}
   subject {Fabricate(:meal, restaurant: restaurant, cuisine: Cuisine.first)}
 
   before {subject.save}

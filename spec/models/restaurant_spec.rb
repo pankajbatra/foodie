@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Restaurant, type: :model do
-  subject { Fabricate(:restaurant, name: 'Spice Junction', locality: 'Broadway') }
+  subject {Fabricate(:restaurant, name: 'Spice Junction', locality: 'Broadway')}
 
   before {subject.save}
 
