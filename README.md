@@ -1,4 +1,7 @@
-# README
+[![Build Status](https://travis-ci.com/pankajbatra/foodie.svg?branch=master)](https://travis-ci.com/pankajbatra/foodie)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5f9fecd575e4a19e14c3/maintainability)](https://codeclimate.com/github/pankajbatra/foodie/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5f9fecd575e4a19e14c3/test_coverage)](https://codeclimate.com/github/pankajbatra/foodie/test_coverage)
+[![pankajbatra](https://circleci.com/gh/pankajbatra/foodie.svg?style=svg)](https://circleci.com/gh/pankajbatra/foodie)
 
     Deployment Automation: Capistrano
     Auth impl: Devise, Rollify, JWT
@@ -70,6 +73,7 @@ An application for Food Delivery
 - Use active jobs
 - Use i18 APIs
 - Use rails mailbox
+- Docker, Kubernetes, ELK, Jenkins, slack
 
 
-gem install specific_install brakeman flay flog reek rubocop roodi pronto pronto-brakeman pronto-reek 
+gem install specific_install brakeman flay flog reek rubocop roodi pronto pronto-brakeman pronto-reek dawnscanner
