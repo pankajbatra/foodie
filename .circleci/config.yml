@@ -7,10 +7,11 @@ jobs:
     - image: circleci/ruby:2.7.0-node
     - image: circleci/mysql:5.7.25
       environment:
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        MYSQL_ROOT_PASSWORD: ''
-        MYSQL_DATABASE: foodie_test
-        MYSQL_USER: root
+        - MYSQL_ALLOW_EMPTY_PASSWORD: true
+        - MYSQL_HOST: 127.0.0.1
+        - MYSQL_ROOT_HOST:%
+        - MYSQL_DATABASE: foodie_test
+        - MYSQL_USER: root
     environment:
     - CC_TEST_REPORTER_ID: c729d68d1d51c3eaf08ac6e0d3ef9a4f0f27606cad91eee78a4d9d5fba52645f
     working_directory: ~/circleci-foodie-ruby-rails
