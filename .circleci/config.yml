@@ -57,14 +57,7 @@ jobs:
                 command: |
                   mkdir -p test-results/rspec test-artifacts
                   ./cc-test-reporter before-build
-                  TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-                  bundle exec rspec --profile 10 \
-                                    --color \
-                                    --order random \
-                                    --format RspecJunitFormatter \
-                                    --out test-results/rspec/rspec.xml \
-                                    --format progress \
-                                    -- ${TESTFILES}
+                  bundle exec rspec --out test-results/rspec/rspec.xml
                   ./cc-test-reporter after-build --exit-code $?
         - store_test_results:
                 path: test-results
