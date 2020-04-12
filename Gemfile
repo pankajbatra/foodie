@@ -84,3 +84,9 @@ gem 'cancancan', '~> 3.1'
 # ar-octopus
 # redis
 gem 'simplecov', require: false, group: :test
+
+gem 'coveralls', require: false
+
+group :development do
+  gem "rails-erd"
+end

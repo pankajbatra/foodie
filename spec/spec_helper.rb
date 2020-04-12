@@ -14,7 +14,10 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'coveralls'
 require 'simplecov'
+Coveralls.wear!
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start
 RSpec.configure do |config|
   config.before(:suite) do

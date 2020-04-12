@@ -2,6 +2,8 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/5f9fecd575e4a19e14c3/maintainability)](https://codeclimate.com/github/pankajbatra/foodie/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5f9fecd575e4a19e14c3/test_coverage)](https://codeclimate.com/github/pankajbatra/foodie/test_coverage)
 [![pankajbatra](https://circleci.com/gh/pankajbatra/foodie.svg?style=svg)](https://circleci.com/gh/pankajbatra/foodie)
+[![Inline docs](http://inch-ci.org/github/pankajbatra/foodie.svg?branch=master)](http://inch-ci.org/github/pankajbatra/foodie)
+[![Coverage Status](https://coveralls.io/repos/github/pankajbatra/foodie/badge.svg?branch=master)](https://coveralls.io/github/pankajbatra/foodie?branch=master)
 
     Deployment Automation: Capistrano
     Auth impl: Devise, Rollify, JWT
@@ -32,12 +34,7 @@ An application for Food Delivery
 * Orders should have a history about the date and time of the status changing
 * Both Regular Users and Restaurant Owners should be able to see a list of the orders
 * Restaurant Owners have the ability to block a User
-
 * REST API. Make it possible to perform all user actions via the API, including authentication
-* In any case, you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc. for this purpose.
-* If it’s a web application, it must be a single-page application. All actions need to be done client-side using AJAX, refreshing the page is not acceptable.
-* Functional UI/UX design is needed. You are not required to create a unique design, however, do follow best practices to make the project as functional as possible.
-* Write unit and e2e tests.
 
 * How to run the test suite: rspec --format doc
 
@@ -50,19 +47,16 @@ An application for Food Delivery
 * append RUBYOPT='-W:no-deprecated -W:no-experimental' before rails commandline to avoid warnings
 
 -- To Do ----
-- Fix code smells - rubycritic, flay, reek, simplecov, rubocop, rails_best_practices and  errors
+- Fix code smells and suggestion by - rubycritic, flay, flog, reek, simplecov, rubocop, rails_best_practices, 
+brakeman, roodi, dawnscanner
 - deployment on heroku
+- state machine impl using https://github.com/aasm/aasm
 - auto refresh orders and status using rails cable
 - photos of meals using rails storage
 - logos of restaurant using rails storage
-- moving permission checks to cancan
+- moving permission checks to cancancan
 - Use name instead of index in status values
 - Move same validation to helper class instead of rewriting to multiple places
-- Group meals by cuisine in user display
-- Show Vegan, Chef Special (show Thumbs up icon), halal, contains egg (show egg icon) on meal. change veg and non-veg text to color icons. Show description and ingredients. spice level as icon (chilli)
-- Show rating on restaurant card and inside
-- configure CI pipelines
-- restaurants sort by delivery time, rating, filter by cuisines (multi-select)
 - change password functionality
 - Email validation to activate account
 - Order email
@@ -74,6 +68,15 @@ An application for Food Delivery
 - Use i18 APIs
 - Use rails mailbox
 - Docker, Kubernetes, ELK, Jenkins, slack
+- capybara for e2e testing
 
 
-gem install specific_install brakeman flay flog reek rubocop roodi pronto pronto-brakeman pronto-reek dawnscanner
+Frontend:
+- Group meals by cuisine in user display
+- Show Vegan, Chef Special (show Thumbs up icon), halal, contains egg (show egg icon) on meal. 
+    change veg and non-veg text to color icons. Show description and ingredients. spice level as icon (chilli)
+- Show rating on restaurant card and inside
+- restaurants sort by delivery time, rating, filter by cuisines (multi-select)
+
+
+ 
