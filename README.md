@@ -11,6 +11,7 @@
     Functional testing: RSpec, Fabricator for fake data gen
     * Ruby version: 2.7.0
     * Rails Version:6.0.2.2
+    * Using circleci, codeclimate, travis-ci, 
 
 An application for Food Delivery
 

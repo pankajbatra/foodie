@@ -1,13 +1,12 @@
 env:
-  global:
-    - CC_TEST_REPORTER_ID=c729d68d1d51c3eaf08ac6e0d3ef9a4f0f27606cad91eee78a4d9d5fba52645f
+ global:
+  - CC_TEST_REPORTER_ID=c729d68d1d51c3eaf08ac6e0d3ef9a4f0f27606cad91eee78a4d9d5fba52645f
+  - DB=mysql
 language: ruby
 rvm:
  - 2.7.0
-env:
- - DB=mysql
 services:
-   - mysql
+ - mysql
 script:
  - RUBYOPT='-W:no-deprecated -W:no-experimental' RAILS_ENV=test bundle exec rake db:migrate --trace
  - RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rake db:test:prepare
@@ -19,4 +18,4 @@ before_script:
  - ./cc-test-reporter before-build
 bundler_args: --binstubs=./bundler_stubs
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+ - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
