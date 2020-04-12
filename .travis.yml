@@ -1,3 +1,6 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=c729d68d1d51c3eaf08ac6e0d3ef9a4f0f27606cad91eee78a4d9d5fba52645f
 language: ruby
 rvm:
  - 2.7.0
@@ -11,4 +14,9 @@ script:
  - RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec spec/
 before_script:
  - mysql -e 'create database foodie_test'
+ - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+ - chmod +x ./cc-test-reporter
+ - ./cc-test-reporter before-build
 bundler_args: --binstubs=./bundler_stubs
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
