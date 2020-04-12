@@ -85,7 +85,7 @@ gem 'cancancan', '~> 3.1'
 # redis
 gem 'simplecov', require: false, group: :test
 
-gem 'coveralls', require: false
+gem 'coveralls', '~> 0.8.23', require: false
 
 group :development do
   gem "rails-erd"
