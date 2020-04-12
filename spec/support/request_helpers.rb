@@ -1,5 +1,10 @@
 module Request
   module AuthenticationHelper
+
+    def jwt_secret_key
+      Rails.application.credentials.devise_jwt_secret_key || ENV['DEVISE_JWT_SECRET_KEY']
+    end
+
     def json
       JSON.parse(response.body)
     end
@@ -14,8 +19,7 @@ module Request
            }
       token_from_request = response.headers['Authorization'].split(' ').last
       JWT.decode(
-        token_from_request,
-        Rails.application.credentials.devise_jwt_secret_key,
+        token_from_request, jwt_secret_key,
         true
       )
     end

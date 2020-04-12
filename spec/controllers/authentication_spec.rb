@@ -50,7 +50,7 @@ RSpec.describe 'Customer Login', type: :request do
 
     it 'returns valid JWT token' do
       token_from_request = response.headers['Authorization'].split(' ').last
-      decoded_token = JWT.decode(token_from_request, Rails.application.credentials.devise_jwt_secret_key, true)
+      decoded_token = JWT.decode(token_from_request, jwt_secret_key, true)
       expect(decoded_token.first['sub']).to be_present
     end
   end
@@ -126,7 +126,7 @@ RSpec.describe 'Restaurant Login', type: :request do
 
     it 'returns valid JWT token' do
       token_from_request = response.headers['Authorization'].split(' ').last
-      decoded_token = JWT.decode(token_from_request, Rails.application.credentials.devise_jwt_secret_key, true)
+      decoded_token = JWT.decode(token_from_request, jwt_secret_key, true)
       expect(decoded_token.first['sub']).to be_present
     end
   end
