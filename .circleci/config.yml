@@ -8,11 +8,15 @@ jobs:
       environment:
         RAILS_ENV: test
         DB_HOST: 127.0.0.1
+        DB_USER: user
+        DB_PASSWORD: passw0rd
         RUBYOPT: '-W:no-deprecated -W:no-experimental'
     - image: circleci/mysql:5.7.25
       environment:
-        - MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-        - MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: foodie_test
+          MYSQL_USER: user
+          MYSQL_PASSWORD: passw0rd
     environment:
     - CC_TEST_REPORTER_ID: c729d68d1d51c3eaf08ac6e0d3ef9a4f0f27606cad91eee78a4d9d5fba52645f
     working_directory: ~/circleci-foodie-ruby-rails
