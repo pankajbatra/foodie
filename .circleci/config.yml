@@ -11,6 +11,7 @@ jobs:
         DB_USER: user
         DB_PASSWORD: passw0rd
         RUBYOPT: '-W:no-deprecated -W:no-experimental'
+        COVERAGE: true
     - image: circleci/mysql:5.7.25
       environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -54,8 +55,18 @@ jobs:
         - run:
                 name: Run tests
                 command: |
+                  mkdir -p test-results/rspec test-artifacts
                   ./cc-test-reporter before-build
-                  RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rspec spec/
-                  ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+                  TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+                  bundle exec rspec --profile 10 \
+                                    --color \
+                                    --order random \
+                                    --format RspecJunitFormatter \
+                                    --out test-results/rspec/rspec.xml \
+                                    --format progress \
+                                    -- ${TESTFILES}
+                  ./cc-test-reporter after-build --exit-code $?
         - store_test_results:
-                path: /tmp/test-results
+                path: test-results
+        - store_artifacts:
+                path: test-artifacts
