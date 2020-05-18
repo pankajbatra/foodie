@@ -203,7 +203,7 @@ GEM
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
-    puma (4.3.3)
+    puma (4.3.4)
       nio4r (~> 2.0)
     puma_worker_killer (0.1.1)
       get_process_mem (~> 0.2)
@@ -368,7 +368,7 @@ DEPENDENCIES
   faker
   listen (>= 3.0.5, < 3.3)
   mysql2 (>= 0.4.4)
-  puma (~> 4.1)
+  puma (~> 4.3)
   puma_worker_killer (~> 0.1.1)
   rack-cors
   rails (~> 6.0.2, >= 6.0.2.1)
