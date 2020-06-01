@@ -71,7 +71,7 @@ gem 'active_model_serializers', '~> 0.10.10'
 
 gem 'will_paginate', '~> 3.3'
 
-gem 'rolify', '~> 5.0'
+gem 'rolify', '~> 5.3'
 
 gem 'cancancan', '~> 3.1'
 
