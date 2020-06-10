@@ -56,7 +56,7 @@ gem 'rails_admin', '~> 2.0', '>= 2.0.2'
 
 gem 'enumerize', '~> 2.3', '>= 2.3.1'
 
-gem 'capistrano', '~> 3.12', '>= 3.12.1'
+gem 'capistrano', '~> 3.14'
 gem 'capistrano-rails', '~> 1.4'
 gem 'capistrano-file-permissions', '~> 1.0'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.6'
