@@ -45,7 +45,7 @@ gem 'faker'
 gem 'factory_bot_rails', '~> 5.1', '>= 5.1.1'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 4.0'
+  gem 'rspec-rails', '~> 5.0'
   gem 'shoulda-matchers', '~> 4.3'
   gem 'database_cleaner'
 end
